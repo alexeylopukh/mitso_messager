@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:messager/constants.dart';
@@ -16,8 +15,7 @@ class UploadImageRpc {
 
   Future<String> upload(File file,
       {StreamController uploadProgressStreamController, String roomId}) async {
-    final fileByteStream =
-        http.ByteStream(DelegatingStream.typed(file.openRead()));
+    final fileByteStream = http.ByteStream(Stream.castFrom(file.openRead()));
     final length = file.lengthSync();
     final uri = Uri.parse(API_URL + '/api/upload_photo');
 
@@ -38,15 +36,13 @@ class UploadImageRpc {
     final request = http.MultipartRequest("POST", uri);
     request.fields['token'] = await _userScope.authToken();
     if (roomId != null) request.fields['room_id'] = roomId;
-    final multipartFile = http.MultipartFile(
-        'file_name', uploadProgressStream, length,
+    final multipartFile = http.MultipartFile('file_name', uploadProgressStream, length,
         filename: path.basename(file.path));
 
     request.files.add(multipartFile);
 
     var response = await request.send().catchError((e) {
-      throw UploadImageRpcException(
-          code: UploadImageRpcExceptionCode.CommunicationError);
+      throw UploadImageRpcException(code: UploadImageRpcExceptionCode.CommunicationError);
     });
 
     if (response.statusCode == 200) {
@@ -54,8 +50,7 @@ class UploadImageRpc {
       var parsedJson = jsonDecode(json);
       if (parsedJson['image_key'] != null) return parsedJson['image_key'];
     }
-    throw UploadImageRpcException(
-        code: UploadImageRpcExceptionCode.InternalError);
+    throw UploadImageRpcException(code: UploadImageRpcExceptionCode.InternalError);
   }
 }
 
