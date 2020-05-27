@@ -4,9 +4,11 @@ import 'package:messager/presentation/components/animated_index_stack.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/components/popups.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
+import 'package:messager/presentation/helper/incoming_push_token.dart';
 import 'package:messager/presentation/main_screen/main_screen_presenter.dart';
 import 'package:messager/presentation/more_screen/more_screen.dart';
 import 'package:messager/presentation/more_screen/more_screen_tab_bar.dart';
+import 'package:messager/presentation/news_screen/news_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -27,10 +29,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     if (_presenter == null) {
-      _presenter = MainScreenPresenter(UserScopeWidget.of(context));
-      UserScopeWidget.of(context).messagesStream.listen((String message) {
-        Popups.showModalDialog(context, PopupState.OK, description: message);
-      });
+      init();
     }
     return GeneralScaffold(
       child: Container(
@@ -38,7 +37,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         children: <Widget>[
           AnimatedIndexedStack(
             index: currentTabIndex,
-            children: <Widget>[ChatRoomsView(), MoreScreen()],
+            children: <Widget>[ChatRoomsView(), NewsScreen(), MoreScreen()],
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -47,12 +46,29 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               onTabClick: onTabClick,
               items: [
                 MoreScreenTab(icon: Icons.message, text: 'Чаты'),
+                MoreScreenTab(icon: Icons.assignment, text: 'Новости'),
                 MoreScreenTab(icon: Icons.menu, text: 'Еще'),
               ],
             ),
           )
         ],
       )),
+    );
+  }
+
+  init() {
+    _presenter = MainScreenPresenter(UserScopeWidget.of(context));
+    UserScopeWidget.of(context).messagesStream.listen((String message) {
+      Popups.showModalDialog(context, PopupState.OK, description: message);
+    });
+    _presenter.userScope.fcmHelper.firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {},
+      onResume: (Map<String, dynamic> message) {
+        return IncomingPushHelper().handlePush(message, _presenter.userScope);
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        return IncomingPushHelper().handlePush(message, _presenter.userScope);
+      },
     );
   }
 

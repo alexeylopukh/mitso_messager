@@ -1,5 +1,5 @@
-const String WEB_SOCKET_URL = 'http://93.85.92.146:3051';
-const String API_URL = 'http://93.85.92.146:3050';
+const String WEB_SOCKET_URL = 'http://192.168.0.168:3051';
+const String API_URL = 'http://192.168.0.168:3050';
 
 const String UNI_LINKS_DOMAIN = 'mitsomessanger.org';
 

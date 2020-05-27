@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:messager/presentation/helper/open_url_helper.dart';
 
 class OpponentMessageView extends StatefulWidget {
   final ChatMessage chatMessage;
@@ -57,30 +57,20 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
               children: <Widget>[
                 Text(
                   chatMessage.sender.name.split(' ')[1],
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: CustomTheme.of(context).boldFontFamily),
+                  style:
+                      TextStyle(fontSize: 16, fontFamily: CustomTheme.of(context).boldFontFamily),
                 ),
                 Container(
                   height: 5,
                   width: 0,
                 ),
                 Linkify(
-                  text: chatMessage.text,
-                  style: TextStyle(fontSize: 16),
-                  linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
-                  onOpen: (link) async {
-                    if (await canLaunch(link.url)) {
-                      await launch(link.url);
-                    } else {
-                      throw 'Could not launch $link';
-                    }
-                  },
-                ),
-//                Text(
-//
-//                  style: TextStyle(fontSize: 16),
-//                ),
+                    text: chatMessage.text,
+                    style: TextStyle(fontSize: 16),
+                    linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
+                    onOpen: (link) {
+                      OpenUrlHelper().openUrl(link.url, context);
+                    }),
                 Container(
                   height: 5,
                   width: 0,

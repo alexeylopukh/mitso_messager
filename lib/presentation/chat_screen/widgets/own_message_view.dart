@@ -4,7 +4,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:messager/presentation/helper/open_url_helper.dart';
 
 class OwnMessageView extends StatefulWidget {
   final ChatMessage chatMessage;
@@ -36,11 +36,9 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                       bottomLeft: Radius.circular(15)),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          CustomTheme.of(context).primaryColor.withOpacity(0.5),
+                      color: CustomTheme.of(context).primaryColor.withOpacity(0.5),
                       blurRadius: 3.0, // has the effect of softening the shadow
-                      spreadRadius:
-                          1.0, // has the effect of extending the shadow
+                      spreadRadius: 1.0, // has the effect of extending the shadow
                       offset: Offset(
                         0, // horizontal, move right 10
                         2.0, // vertical, move down 10
@@ -53,14 +51,9 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                   Linkify(
                     text: chatMessage.text,
                     style: TextStyle(fontSize: 16, color: Colors.white),
-                    linkStyle:
-                        TextStyle(fontSize: 16, color: Color(0xff002940)),
-                    onOpen: (link) async {
-                      if (await canLaunch(link.url)) {
-                        await launch(link.url);
-                      } else {
-                        throw 'Could not launch $link';
-                      }
+                    linkStyle: TextStyle(fontSize: 16, color: Color(0xff002940)),
+                    onOpen: (link) {
+                      OpenUrlHelper().openUrl(link.url, context);
                     },
                   ),
                   Container(
@@ -81,15 +74,13 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                         Padding(
                           padding: const EdgeInsets.only(left: 3),
                           child: Icon(Icons.access_time,
-                              size: 12,
-                              color: CustomTheme.of(context).backgroundColor),
+                              size: 12, color: CustomTheme.of(context).backgroundColor),
                         )
                       else
                         Padding(
                           padding: const EdgeInsets.only(left: 3),
                           child: Icon(Icons.done,
-                              size: 12,
-                              color: CustomTheme.of(context).backgroundColor),
+                              size: 12, color: CustomTheme.of(context).backgroundColor),
                         )
                     ],
                   )

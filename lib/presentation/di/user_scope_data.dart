@@ -15,13 +15,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserScopeData {
   UserScopeWidgetState state;
   bool isColdStart;
-  FcmHelper _fcmHelper;
+  FcmHelper fcmHelper;
   SocketHelper socketHelper;
   SocketInteractor get socketInteractor => socketHelper.socketInteractor;
   RoomsLocalStore roomsLocalStore;
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
-    _fcmHelper = FcmHelper();
+    fcmHelper = FcmHelper();
     roomsLocalStore = RoomsLocalStore(this);
   }
 
@@ -43,7 +43,7 @@ class UserScopeData {
   }
 
   Future<String> fcmToken() async {
-    return _fcmHelper.getFcmToken();
+    return fcmHelper.getFcmToken();
   }
 
   Future<String> authToken() async {
@@ -90,15 +90,14 @@ class _UserScopeWidget extends InheritedWidget {
   final UserScopeWidgetState state;
   final UserScopeData data;
 
-  _UserScopeWidget._(Key key, Widget child, this.state, this.data)
-      : super(key: key, child: child) {
+  _UserScopeWidget._(Key key, Widget child, this.state, this.data) : super(key: key, child: child) {
     state.isColdStart = false;
   }
 
   factory _UserScopeWidget(
       {Key key, @required Widget child, @required UserScopeWidgetState state}) {
-    return _UserScopeWidget._(key, child, state,
-        UserScopeData(state: state, isColdStart: state.isColdStart));
+    return _UserScopeWidget._(
+        key, child, state, UserScopeData(state: state, isColdStart: state.isColdStart));
   }
 
   @override
@@ -111,8 +110,7 @@ class UserScopeWidget extends StatefulWidget {
   UserScopeWidget({Key key, @required this.child}) : super(key: key);
 
   static UserScopeData of(BuildContext context) {
-    return (context.dependOnInheritedWidgetOfExactType<_UserScopeWidget>())
-        .data;
+    return (context.dependOnInheritedWidgetOfExactType<_UserScopeWidget>()).data;
   }
 
   @override
