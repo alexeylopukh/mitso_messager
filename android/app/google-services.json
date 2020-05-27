@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "472506127806",
+    "firebase_url": "https://mitso-messanger.firebaseio.com",
+    "project_id": "mitso-messanger",
+    "storage_bucket": "mitso-messanger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472506127806:android:14b4f985c5f34c1a7855ef",
+        "android_client_info": {
+          "package_name": "com.mitso.messager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472506127806-th7j4nekv9ll181elgeqekcq2a83ij9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_DJecZbf7ooJjDHGhDT1PqLI1zcxX-ZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472506127806-th7j4nekv9ll181elgeqekcq2a83ij9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
