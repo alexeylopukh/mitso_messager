@@ -6,6 +6,7 @@ import 'package:messager/constants.dart';
 import 'package:messager/interactor/socket_interactor.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
+import 'package:messager/objects/news_model.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/objects/typing_user.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
@@ -125,18 +126,11 @@ class SocketHelper {
       if (profile != null && isTyping != null && roomId != null)
         userScope.socketInteractor.typingUsersStream.add(TypingUser(profile, isTyping, roomId));
     });
-    _socket.on(
-        'on_news',
-        (data) => {
-              //
-              userScope.socketInteractor.newsModels
-            });
-    _socket.on(
-        'on_create_news',
-        (data) => {
-              //test
-              print(data)
-            });
+    _socket.on('on_news', (data) {
+      final news = List<NewsModel>.from(data.map((x) => NewsModel.fromJson(x)));
+      userScope.socketInteractor.newsModels.add(news);
+    });
+    _socket.on('on_create_news', (data) => {sendData('on_news', {})});
   }
 
   connect() {
