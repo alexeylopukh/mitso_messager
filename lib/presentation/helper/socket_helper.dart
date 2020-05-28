@@ -48,12 +48,9 @@ class SocketHelper {
     if (!_authIsSended) {
       _authIsSended = true;
       print('send auth');
-      _socket.emit('auth',
-          jsonEncode({'token': authToken, 'push_token': pushToken ?? ""}));
+      _socket.emit('auth', jsonEncode({'token': authToken, 'push_token': pushToken ?? ""}));
     }
-    var result = await chatHistoryCompleter.future
-        .timeout(Duration(seconds: 2))
-        .catchError((e) {});
+    var result = await chatHistoryCompleter.future.timeout(Duration(seconds: 2)).catchError((e) {});
     print(result);
     if (result == true) _isSocketAuth.add(true);
     return result == true;
@@ -104,8 +101,7 @@ class SocketHelper {
       print(value);
     });
     _socket.on('on_rooms', (value) {
-      List<ChatRoom> rooms =
-          List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
+      List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       socketInteractor.appendChatRooms(rooms);
       if (chatHistoryCompleter != null) {
         chatHistoryCompleter.complete(true);
@@ -122,16 +118,25 @@ class SocketHelper {
       }
     });
     _socket.on('on_typing', (value) {
-      if (value['profile'] == null ||
-          value['typing'] == null ||
-          value['room_id'] == null) return;
+      if (value['profile'] == null || value['typing'] == null || value['room_id'] == null) return;
       Profile profile = Profile.fromJson(value['profile']);
       bool isTyping = value['typing'];
       int roomId = value['room_id'];
       if (profile != null && isTyping != null && roomId != null)
-        userScope.socketInteractor.typingUsersStream
-            .add(TypingUser(profile, isTyping, roomId));
+        userScope.socketInteractor.typingUsersStream.add(TypingUser(profile, isTyping, roomId));
     });
+    _socket.on(
+        'on_news',
+        (data) => {
+              //test
+              print(data)
+            });
+    _socket.on(
+        'on_create_news',
+        (data) => {
+              //test
+              print(data)
+            });
   }
 
   connect() {

@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
+import 'package:messager/presentation/create_news_screen/create_news_screen.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/news_screen/news_view_model.dart';
+import 'package:messager/presentation/news_screen/widgets/news_fab.dart';
 
 import 'news_screen_presenter.dart';
 
@@ -21,22 +23,40 @@ class _NewsScreenState extends State<NewsScreen> {
       _presenter = NewsScreenPresenter();
     }
     return GeneralScaffold(
-      child: Column(
+      child: Stack(
         children: <Widget>[
-          navBar(),
-          Expanded(
-            child: StreamBuilder<NewsViewModel>(
-              stream: _presenter.viewModelStream,
-              builder: (context, snapshot) {
-                NewsViewModel vm = snapshot.data;
-                return ListView.builder(
-                    itemCount: vm?.news?.length,
-                    itemBuilder: (context, index) {
-                      return Text(vm.news[index].text);
-                    });
-              },
-            ),
-          )
+          Column(
+            children: <Widget>[
+              navBar(),
+              Expanded(
+                child: StreamBuilder<NewsViewModel>(
+                  stream: _presenter.viewModelStream,
+                  builder: (context, snapshot) {
+                    NewsViewModel vm = snapshot.data;
+                    if (vm?.news == null)
+                      return Container();
+                    else
+                      return ListView.builder(
+                          itemCount: vm?.news?.length,
+                          itemBuilder: (context, index) {
+                            return Text(vm.news[index].text);
+                          });
+                  },
+                ),
+              )
+            ],
+          ),
+          Padding(
+              padding:
+                  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 78, right: 20),
+              child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: NewsFab(
+                    onTab: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) => CreateNewsScreen()));
+                    },
+                  )))
         ],
       ),
     );

@@ -26,8 +26,7 @@ class SocketInteractor {
   UnsentMessagesStore _unsentMessagesStore = UnsentMessagesStore();
   BehaviorSubject<List<ChatRoom>> chatRoomStream = BehaviorSubject.seeded([]);
   BehaviorSubject<TypingUser> typingUsersStream = BehaviorSubject();
-  BehaviorSubject<List<ChatMessage>> unsendedMessages =
-      BehaviorSubject.seeded([]);
+  BehaviorSubject<List<ChatMessage>> unsendedMessages = BehaviorSubject.seeded([]);
 
   handleNewMessage(ChatMessage message) {
     _tryDeleteUnsentMessage(message);
@@ -44,6 +43,10 @@ class SocketInteractor {
     socket.sendTypingStatus(isTyping, roomId);
   }
 
+  sendNews(String title, String text) {
+    socket.sendData('on_create_news', {"title": title, "text": text, "uuid": Uuid().v4()});
+  }
+
   sendMessage(int roomId, String message) {
     var chatMessage = ChatMessage(
         roomId: roomId,
@@ -57,11 +60,8 @@ class SocketInteractor {
   }
 
   _sendMessageWithSocket(ChatMessage chatMessage) {
-    socket.sendData('on_chat_message', {
-      "room_id": chatMessage.roomId,
-      "uuid": chatMessage.uuid,
-      "text": chatMessage.text
-    });
+    socket.sendData('on_chat_message',
+        {"room_id": chatMessage.roomId, "uuid": chatMessage.uuid, "text": chatMessage.text});
   }
 
   _appendNewMessage(ChatMessage message) async {
