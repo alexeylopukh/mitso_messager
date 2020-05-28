@@ -43,15 +43,18 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
                 if (viewModel.rooms == null) {
                   return Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          CustomTheme.of(context).primaryColor),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(CustomTheme.of(context).primaryColor),
                       strokeWidth: 2.0,
                     ),
                   );
                 }
                 return Expanded(
                   child: ListView.builder(
-                      padding: EdgeInsets.zero,
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom +
+                              MediaQuery.of(context).padding.bottom +
+                              55),
                       itemCount: viewModel.rooms.length,
                       itemBuilder: (context, index) {
                         return ChatRoomItemView(
@@ -97,9 +100,7 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
                   Padding(
                     padding: const EdgeInsets.only(left: 20),
                     child: StreamBuilder<bool>(
-                        stream: UserScopeWidget.of(context)
-                            .socketHelper
-                            .isSocketConnectionStream,
+                        stream: UserScopeWidget.of(context).socketHelper.isSocketConnectionStream,
                         builder: (context, snapshot) {
                           bool isConnected = UserScopeWidget.of(context)
                               .socketHelper
@@ -110,8 +111,7 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
                             style: TextStyle(
                                 color: CustomTheme.of(context).textBlackColor,
                                 fontSize: isConnected ? 28 : 24,
-                                fontFamily:
-                                    CustomTheme.of(context).boldFontFamily),
+                                fontFamily: CustomTheme.of(context).boldFontFamily),
                           );
                         }),
                   )

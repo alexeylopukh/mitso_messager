@@ -7,6 +7,7 @@ import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/news_screen/news_view_model.dart';
 import 'package:messager/presentation/news_screen/widgets/news_fab.dart';
+import 'package:messager/presentation/news_screen/widgets/news_item_widget.dart';
 
 import 'news_screen_presenter.dart';
 
@@ -38,9 +39,15 @@ class _NewsScreenState extends State<NewsScreen> {
                       return Container();
                     else
                       return ListView.builder(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom +
+                                  MediaQuery.of(context).padding.bottom +
+                                  55),
                           itemCount: vm?.news?.length,
                           itemBuilder: (context, index) {
-                            return Text(vm.news[index].text);
+                            return NewsItemWidget(
+                              newsModel: vm.news[index],
+                            );
                           });
                   },
                 ),

@@ -5,7 +5,11 @@ import 'package:rxdart/rxdart.dart';
 
 class NewsScreenPresenter {
   final UserScopeData userScope;
-  NewsScreenPresenter({@required this.userScope});
+  NewsScreenPresenter({@required this.userScope}) {
+    userScope.socketInteractor.newsModels.listen((value) {
+      _viewModelStream.add(NewsViewModel(news: value));
+    });
+  }
 
   BehaviorSubject<NewsViewModel> _viewModelStream = BehaviorSubject.seeded(NewsViewModel(news: []));
   ValueStream<NewsViewModel> get viewModelStream => _viewModelStream.stream;
