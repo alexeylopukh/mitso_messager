@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/create_news_screen/create_news_screen.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
+import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/news_screen/news_view_model.dart';
 import 'package:messager/presentation/news_screen/widgets/news_fab.dart';
 
@@ -20,7 +21,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     if (_presenter == null) {
-      _presenter = NewsScreenPresenter();
+      _presenter = NewsScreenPresenter(userScope: UserScopeWidget.of(context));
     }
     return GeneralScaffold(
       child: Stack(

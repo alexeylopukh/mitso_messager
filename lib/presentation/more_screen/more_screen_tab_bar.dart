@@ -11,11 +11,9 @@ class MoreScreenTabBar extends StatefulWidget {
   final Function(int) onTabClick;
 
   const MoreScreenTabBar(
-      {Key key,
-      @required this.items,
-      @required this.currentTabIndex,
-      @required this.onTabClick})
+      {Key key, @required this.items, @required this.currentTabIndex, @required this.onTabClick})
       : super(key: key);
+
   @override
   _MoreScreenTabBarState createState() => _MoreScreenTabBarState();
 }
@@ -63,7 +61,9 @@ class _MoreScreenTabBarState extends State<MoreScreenTabBar> {
     }
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).viewInsets.bottom + _TAB_HEIGHT,
+      height: MediaQuery.of(context).padding.bottom +
+          MediaQuery.of(context).viewInsets.bottom +
+          _TAB_HEIGHT,
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
@@ -78,14 +78,17 @@ class _MoreScreenTabBarState extends State<MoreScreenTabBar> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: Container(
-                height: _TAB_HEIGHT + MediaQuery.of(context).viewInsets.bottom,
+                height: _TAB_HEIGHT +
+                    MediaQuery.of(context).viewInsets.bottom +
+                    MediaQuery.of(context).padding.bottom,
                 color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
               ),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+                bottom: MediaQuery.of(context).viewInsets.bottom +
+                    MediaQuery.of(context).padding.bottom),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: tabs,

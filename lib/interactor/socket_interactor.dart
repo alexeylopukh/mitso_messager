@@ -1,6 +1,7 @@
 import 'package:messager/data/store/local/unsent_messages_store.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
+import 'package:messager/objects/news_model.dart';
 import 'package:messager/objects/typing_user.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/socket_helper.dart';
@@ -27,6 +28,7 @@ class SocketInteractor {
   BehaviorSubject<List<ChatRoom>> chatRoomStream = BehaviorSubject.seeded([]);
   BehaviorSubject<TypingUser> typingUsersStream = BehaviorSubject();
   BehaviorSubject<List<ChatMessage>> unsendedMessages = BehaviorSubject.seeded([]);
+  BehaviorSubject<List<NewsModel>> newsModels = BehaviorSubject.seeded([]);
 
   handleNewMessage(ChatMessage message) {
     _tryDeleteUnsentMessage(message);
@@ -107,5 +109,6 @@ class SocketInteractor {
     chatRoomStream.close();
     typingUsersStream.close();
     unsendedMessages.close();
+    newsModels.close();
   }
 }
