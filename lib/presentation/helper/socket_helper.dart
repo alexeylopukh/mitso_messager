@@ -128,8 +128,8 @@ class SocketHelper {
     _socket.on(
         'on_news',
         (data) => {
-              //test
-              print(data)
+              //
+              userScope.socketInteractor.newsModels
             });
     _socket.on(
         'on_create_news',
