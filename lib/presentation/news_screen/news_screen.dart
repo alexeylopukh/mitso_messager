@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
+import 'package:messager/presentation/news_screen/news_view_model.dart';
+
+import 'news_screen_presenter.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -10,11 +13,31 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  NewsScreenPresenter _presenter;
+
   @override
   Widget build(BuildContext context) {
+    if (_presenter == null) {
+      _presenter = NewsScreenPresenter();
+    }
     return GeneralScaffold(
       child: Column(
-        children: <Widget>[navBar()],
+        children: <Widget>[
+          navBar(),
+          Expanded(
+            child: StreamBuilder<NewsViewModel>(
+              stream: _presenter.viewModelStream,
+              builder: (context, snapshot) {
+                NewsViewModel vm = snapshot.data;
+                return ListView.builder(
+                    itemCount: vm?.news?.length,
+                    itemBuilder: (context, index) {
+                      return Text(vm.news[index].text);
+                    });
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -65,5 +88,10 @@ class _NewsScreenState extends State<NewsScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
