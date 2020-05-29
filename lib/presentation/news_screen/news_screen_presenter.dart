@@ -7,7 +7,7 @@ class NewsScreenPresenter {
   final UserScopeData userScope;
   NewsScreenPresenter({@required this.userScope}) {
     userScope.socketInteractor.newsModels.listen((value) {
-      _viewModelStream.add(NewsViewModel(news: value));
+      _viewModelStream.add(NewsViewModel(news: List.from(value.reversed)));
     });
   }
 
