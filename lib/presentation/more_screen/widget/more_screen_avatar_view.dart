@@ -4,8 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:messager/constants.dart';
+import 'package:messager/network/rpc/update_profile_rpc.dart';
+import 'package:messager/network/rpc/upload_image.dart';
 import 'package:messager/presentation/components/custom_button.dart';
 import 'package:messager/presentation/components/custom_elevation.dart';
+import 'package:messager/presentation/components/popups.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 
@@ -42,13 +46,10 @@ class _MoreScreenAvatarViewState extends State<MoreScreenAvatarView> {
                     image: profile.avatarUrl == null
                         ? uploadedImage == null
                             ? null
-                            : DecorationImage(
-                                fit: BoxFit.cover,
-                                image: FileImage(uploadedImage))
+                            : DecorationImage(fit: BoxFit.cover, image: FileImage(uploadedImage))
                         : DecorationImage(
                             fit: BoxFit.cover,
-                            image:
-                                CachedNetworkImageProvider(profile.avatarUrl),
+                            image: CachedNetworkImageProvider(API_URL + "/" + profile.avatarUrl),
                           ),
                   ),
                   child: profile.avatarUrl == null && uploadedImage == null
@@ -57,8 +58,7 @@ class _MoreScreenAvatarViewState extends State<MoreScreenAvatarView> {
                             profile.name.split('').first.toUpperCase(),
                             style: TextStyle(
                                 color: Colors.white,
-                                fontFamily:
-                                    CustomTheme.of(context).boldFontFamily,
+                                fontFamily: CustomTheme.of(context).boldFontFamily,
                                 fontSize: 50),
                           ),
                         )
@@ -105,6 +105,7 @@ class _MoreScreenAvatarViewState extends State<MoreScreenAvatarView> {
               uploadedImage = croppedFile;
               state = MoreScreenAvatarViewState.Uploading;
               update();
+              uploadPhoto();
             },
           )
         ],
@@ -114,5 +115,23 @@ class _MoreScreenAvatarViewState extends State<MoreScreenAvatarView> {
 
   update() {
     if (mounted) setState(() {});
+  }
+
+  uploadPhoto() async {
+    String imageKey =
+        await UploadImageRpc(UserScopeWidget.of(context)).upload(uploadedImage).catchError((e) {
+      Popups.showModalDialog(context, PopupState.OK, description: e.message);
+    });
+    if (imageKey != null) {
+      await UpdateProfileRpc(UserScopeWidget.of(context))
+          .update(imageKey: imageKey)
+          .catchError((e) {
+        Popups.showModalDialog(context, PopupState.OK, description: e.message);
+      });
+      UserScopeWidget.of(context).myProfile.avatarUrl = imageKey;
+      UserScopeWidget.of(context).setMyProfile(UserScopeWidget.of(context).myProfile);
+    }
+    state = MoreScreenAvatarViewState.None;
+    update();
   }
 }

@@ -9,9 +9,9 @@ import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:path/path.dart' as path;
 
 class UploadImageRpc {
-  final UserScopeData _userScope;
+  final UserScopeData userScope;
 
-  UploadImageRpc(this._userScope);
+  UploadImageRpc(this.userScope);
 
   Future<String> upload(File file,
       {StreamController uploadProgressStreamController, String roomId}) async {
@@ -34,7 +34,7 @@ class UploadImageRpc {
             }));
 
     final request = http.MultipartRequest("POST", uri);
-    request.fields['token'] = await _userScope.authToken();
+    request.fields['token'] = await userScope.authToken();
     if (roomId != null) request.fields['room_id'] = roomId;
     final multipartFile = http.MultipartFile('file_name', uploadProgressStream, length,
         filename: path.basename(file.path));
