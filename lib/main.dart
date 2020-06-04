@@ -20,7 +20,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  static const String _title = 'Mitso messanger';
+  static const String _title = 'MiMessenger';
 
   @override
   void initState() {
@@ -47,11 +47,9 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 builder: (context, snapshot) {
                   if (snapshot.data == null) return Container();
                   if (UserScopeWidget.of(context).token == null) {
-                    return createMaterialApp(
-                        AuthScreen(), UserScopeWidget.of(context));
+                    return createMaterialApp(AuthScreen(), UserScopeWidget.of(context));
                   }
-                  return createMaterialApp(
-                      MainScreen(), UserScopeWidget.of(context));
+                  return createMaterialApp(MainScreen(), UserScopeWidget.of(context));
                 });
           },
         ),

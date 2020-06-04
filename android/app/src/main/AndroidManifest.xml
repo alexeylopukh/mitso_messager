@@ -6,7 +6,7 @@
 
     <application
         android:name=".Application"
-        android:label="messager"
+        android:label="MiMessenger"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">

@@ -83,6 +83,7 @@ class SocketHelper {
     _socket.on('ping', (value) async {
       _pingCompleter = Completer();
       _pingCompleter.future.timeout(Duration(seconds: 3), onTimeout: () {
+        print('Ping timeoute');
         _socket.disconnect();
       });
     });
@@ -109,7 +110,7 @@ class SocketHelper {
       }
     });
     _socket.on('on_create_room', (value) {
-      if (createRoomCompleter != null) {
+      if (createRoomCompleter != null && !createRoomCompleter.isCompleted) {
         createRoomCompleter.complete(value != null);
       }
     });

@@ -28,33 +28,31 @@ class _AuthScreenState extends State<AuthScreen> {
         },
       ),
       SignUpView(onChangePage: () {
-        _pageController.animateToPage(0,
-            duration: Duration(milliseconds: 500), curve: Curves.ease);
+        _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
       }),
     ];
     return GeneralScaffold(child: LayoutBuilder(builder: (context, c) {
       if (_screenHeight == null) _screenHeight = c.maxHeight;
-      return SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-              maxHeight: _screenHeight, minHeight: _screenHeight),
-          child: Container(
-            height: _screenHeight,
-            width: double.infinity,
-            child: Column(
+      return Container(
+        height: _screenHeight,
+        width: double.infinity,
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: buildWaves(),
+            ),
+            Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: CustomElevation(
-                      height: 120,
-                      child: SizedBox(
-                          width: 120,
-                          height: 120,
-                          child:
-                              SvgPicture.asset('assets/images/app_icon.svg')),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: CustomElevation(
+                    height: 120,
+                    child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: SvgPicture.asset('assets/images/app_icon.svg')),
                   ),
                 ),
                 Expanded(
@@ -64,10 +62,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     physics: NeverScrollableScrollPhysics(),
                   ),
                 ),
-                buildWaves()
+                Container(
+                  height: MediaQuery.of(context).systemGestureInsets.bottom +
+                      MediaQuery.of(context).padding.bottom +
+                      90,
+                )
               ],
             ),
-          ),
+          ],
         ),
       );
     }));

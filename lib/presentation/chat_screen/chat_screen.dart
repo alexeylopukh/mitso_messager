@@ -35,8 +35,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     if (_presenter == null)
-      _presenter = ChatScreenPresenter(
-          userScope: UserScopeWidget.of(context), roomId: widget.roomId);
+      _presenter =
+          ChatScreenPresenter(userScope: UserScopeWidget.of(context), roomId: widget.roomId);
     return StreamBuilder<ChatScreenViewModel>(
         stream: _presenter.viewModelSteam,
         builder: (context, snapshot) {
@@ -104,8 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: SizedBox(
                                 height: 24,
                                 width: 24,
-                                child: SvgPicture.asset(
-                                    'assets/icons/ic_back.svg')),
+                                child: SvgPicture.asset('assets/icons/ic_back.svg')),
                           ),
                         ),
                         Hero(
@@ -126,10 +125,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               Text(
                                 chatRoom.name,
                                 style: TextStyle(
-                                    color: CustomTheme.of(context)
-                                        .textBlackGrayColor,
-                                    fontFamily:
-                                        CustomTheme.of(context).boldFontFamily,
+                                    color: CustomTheme.of(context).textBlackGrayColor,
+                                    fontFamily: CustomTheme.of(context).boldFontFamily,
                                     fontSize: 18),
                               ),
                             ],
@@ -176,8 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onTap: () async {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => QrCodeView(
-                        textForGenerate: UniLinksGenerator()
-                            .generateJoinChatLink(chatRoom.id),
+                        textForGenerate: UniLinksGenerator().generateJoinChatLink(chatRoom.id),
                       )));
             },
             child: Container(
@@ -206,9 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
-              Share.text(
-                  chatRoom.name,
-                  UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+              Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
                   'text/plain');
             },
             child: Container(
@@ -263,8 +257,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Container(
@@ -290,8 +283,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               enabledBorder: InputBorder.none,
                               errorBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 5),
+                              contentPadding:
+                                  EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 5),
                             ),
                           )),
                     ),
@@ -310,8 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       child: SizedBox(
                                           height: 24,
                                           width: 24,
-                                          child: SvgPicture.asset(
-                                              'assets/icons/ic_send.svg')),
+                                          child: SvgPicture.asset('assets/icons/ic_send.svg')),
                                     )))),
                       ),
                     )
@@ -341,19 +333,17 @@ class _ChatScreenState extends State<ChatScreen> {
         itemBuilder: (context, index) {
           if (index == 0)
             return StreamBuilder<TypingUser>(
-                stream: UserScopeWidget.of(context)
-                    .socketInteractor
-                    .typingUsersStream,
+                stream: UserScopeWidget.of(context).socketInteractor.typingUsersStream,
                 builder: (context, snapshot) {
                   TypingUser typingUser = snapshot.data;
-                  if (typingUser != null && !typingUser.isTyping)
+                  if (typingUser != null &&
+                      (!typingUser.isTyping || typingUser.roomId != _presenter.roomId))
                     typingUser = null;
                   return TypingMessageWidget(
                     typingUser: typingUser,
                   );
                 });
-          if (messages[index - 1].sender.id ==
-              UserScopeWidget.of(context).myProfile.id)
+          if (messages[index - 1].sender.id == UserScopeWidget.of(context).myProfile.id)
             return OwnMessageView(
               chatMessage: messages[index - 1],
             );
