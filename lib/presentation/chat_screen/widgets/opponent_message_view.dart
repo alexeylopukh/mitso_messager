@@ -58,7 +58,7 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  chatMessage.sender.name.split(' ')[1],
+                  chatMessage.sender.name.split(' ')[0],
                   style:
                       TextStyle(fontSize: 16, fontFamily: CustomTheme.of(context).boldFontFamily),
                 ),
@@ -66,13 +66,14 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
                   height: 5,
                   width: 0,
                 ),
-                Linkify(
-                    text: chatMessage.text,
-                    style: TextStyle(fontSize: 16),
-                    linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
-                    onOpen: (link) {
-                      OpenUrlHelper().openUrl(link.url, context);
-                    }),
+                if (chatMessage.text.isNotEmpty)
+                  Linkify(
+                      text: chatMessage.text,
+                      style: TextStyle(fontSize: 16),
+                      linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
+                      onOpen: (link) {
+                        OpenUrlHelper().openUrl(link.url, context);
+                      }),
                 Container(
                   height: 5,
                   width: 0,

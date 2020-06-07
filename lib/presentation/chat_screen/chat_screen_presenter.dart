@@ -152,10 +152,13 @@ class ChatScreenPresenter {
     if (haveUnuploadedPhoto()) return;
     messageController.clear();
     List<String> photos = [];
-    if (uploadImages.value.isNotEmpty)
+    if (uploadImages.value.isNotEmpty) {
       uploadImages.value.forEach((UploadImage i) {
         photos.add(i.key);
       });
+      uploadImages.add(uploadImages.value..clear());
+    }
+
     socketInteractor.sendMessage(roomId, message, photos);
   }
 
