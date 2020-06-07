@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:messager/data/store/local/unsent_messages_store.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
@@ -60,6 +62,17 @@ class SocketInteractor {
         isSended: false);
     _addNewUnsendedMessage(chatMessage);
     _sendMessageWithSocket(chatMessage);
+  }
+
+  Future<List<ChatMessage>> getChatHistory(int roomId, int messageId) async {
+    print('get');
+    socket.getChatMessagesCompleter = Completer();
+    socket.sendData(
+        'get_chat_message', {"room_id": roomId, "limit": 50, "last_message_id": messageId});
+    List<ChatMessage> messages =
+        await socket.getChatMessagesCompleter.future.timeout(Duration(seconds: 3));
+    socket.chatHistoryCompleter = null;
+    return messages;
   }
 
   _sendMessageWithSocket(ChatMessage chatMessage) {

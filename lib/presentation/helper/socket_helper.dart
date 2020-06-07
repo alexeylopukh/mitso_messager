@@ -23,6 +23,7 @@ class SocketHelper {
   Completer<bool> joinChatCompleter;
   Completer<bool> createRoomCompleter;
   Completer<bool> chatHistoryCompleter;
+  Completer<List<ChatMessage>> getChatMessagesCompleter;
 
   SocketHelper({@required this.userScope}) {
     _socket = io(WEB_SOCKET_URL, <String, dynamic>{
@@ -118,6 +119,16 @@ class SocketHelper {
       if (joinChatCompleter != null) {
         joinChatCompleter.complete(value != null);
       }
+    });
+    _socket.on('on_get_chat_message', (value) {
+      List<ChatMessage> messages = [];
+      List<dynamic> list = value;
+      if (list == null || list.isEmpty) return;
+      list.forEach((element) {
+        messages.add(ChatMessage.fromJson(element));
+      });
+      if (getChatMessagesCompleter != null && !getChatMessagesCompleter.isCompleted)
+        getChatMessagesCompleter.complete(messages);
     });
     _socket.on('on_typing', (value) {
       if (value['profile'] == null || value['typing'] == null || value['room_id'] == null) return;

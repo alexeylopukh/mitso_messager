@@ -359,7 +359,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return SizedBox(
       height: 50,
       child: ListView.builder(
-          controller: _presenter.scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
           itemBuilder: (context, index) => UploadImageItem(
@@ -394,6 +393,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     typingUser: typingUser,
                   );
                 });
+          if (index == messages.length) _presenter.loadChatHistory();
           if (messages[index - 1].sender.id == UserScopeWidget.of(context).myProfile.id)
             return OwnMessageView(
               chatMessage: messages[index - 1],

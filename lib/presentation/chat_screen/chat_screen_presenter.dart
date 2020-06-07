@@ -45,12 +45,6 @@ class ChatScreenPresenter {
         textEditingController: messageController,
         onStopTyping: () => sendTypingStatus(false),
         onStartTyping: () => sendTypingStatus(true));
-
-    scrollController.addListener(() {
-      if (scrollController.position.maxScrollExtent == scrollController.offset) {
-        loadChatHistory();
-      }
-    });
   }
 
   TextEditingController messageController = TextEditingController();
@@ -61,9 +55,13 @@ class ChatScreenPresenter {
 
   ValueStream<ChatScreenViewModel> get viewModelSteam => _viewModelStream.stream;
 
-  ScrollController scrollController = ScrollController();
-
-  loadChatHistory() {}
+  loadChatHistory() async {
+    var messages = await socketInteractor.getChatHistory(
+        roomId, viewModelSteam.value.chatRoom.messages.last.id);
+    if (messages != null) {
+      _viewModelStream.add(viewModelSteam.value..chatRoom.messages.addAll(messages));
+    }
+  }
 
   ChatRoom _getCurrentRoom() {
     List<ChatRoom> chatRooms = socketInteractor.chatRoomStream.value;
