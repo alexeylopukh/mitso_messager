@@ -19,7 +19,7 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, c) {
-      width = c.maxWidth;
+      width = c.maxWidth - 4;
       switch (imageKeys.length) {
         case 1:
           return layout1();
@@ -355,57 +355,68 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[0]),
+            createContainer(
+              width / 3,
+              imageKeys[0],
             ),
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[1]),
+            createContainer(
+              width / 3,
+              imageKeys[1],
             ),
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[2]),
+            createContainer(
+              width / 3,
+              imageKeys[2],
             ),
           ],
         ),
         Row(
           children: <Widget>[
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[3]),
+            createContainer(
+              width / 3,
+              imageKeys[3],
             ),
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[4]),
+            createContainer(
+              width / 3,
+              imageKeys[4],
             ),
-            Container(
-              width: width / 3,
-              decoration: decoration(imageKeys[5]),
-            )
+            createContainer(
+              width / 3,
+              imageKeys[5],
+            ),
           ],
         ),
         Row(
           children: <Widget>[
-            Container(
-              width: width / 4,
-              decoration: decoration(imageKeys[6]),
+            createContainer(
+              width / 4,
+              imageKeys[6],
             ),
-            Container(
-              width: width / 4,
-              decoration: decoration(imageKeys[7]),
+            createContainer(
+              width / 4,
+              imageKeys[7],
             ),
-            Container(
-              width: width / 4,
-              decoration: decoration(imageKeys[8]),
+            createContainer(
+              width / 4,
+              imageKeys[8],
             ),
-            Container(
-              width: width / 4,
-              decoration: decoration(imageKeys[9]),
+            createContainer(
+              width / 4,
+              imageKeys[9],
             )
           ],
         ),
       ],
+    );
+  }
+
+  Widget createContainer(double width, String url) {
+    return Padding(
+      padding: EdgeInsets.all(0.5),
+      child: Container(
+        width: width,
+        height: width,
+        decoration: decoration(url),
+      ),
     );
   }
 

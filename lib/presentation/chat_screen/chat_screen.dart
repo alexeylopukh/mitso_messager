@@ -359,6 +359,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return SizedBox(
       height: 50,
       child: ListView.builder(
+          controller: _presenter.scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
           itemBuilder: (context, index) => UploadImageItem(
