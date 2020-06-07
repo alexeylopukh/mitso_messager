@@ -6,6 +6,8 @@ import 'package:messager/objects/chat_message.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/open_url_helper.dart';
 
+import 'chat_screen_attached_images.dart';
+
 class OwnMessageView extends StatefulWidget {
   final ChatMessage chatMessage;
 
@@ -60,6 +62,10 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                     height: 5,
                     width: 0,
                   ),
+                  if (chatMessage.photos != null && chatMessage.photos.isNotEmpty)
+                    ChatScreenAttachedImages(
+                      imageKeys: chatMessage.photos,
+                    ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

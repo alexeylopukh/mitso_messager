@@ -7,6 +7,8 @@ import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/open_url_helper.dart';
 
+import 'chat_screen_attached_images.dart';
+
 class OpponentMessageView extends StatefulWidget {
   final ChatMessage chatMessage;
 
@@ -75,6 +77,10 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
                   height: 5,
                   width: 0,
                 ),
+                if (chatMessage.photos != null && chatMessage.photos.isNotEmpty)
+                  ChatScreenAttachedImages(
+                    imageKeys: chatMessage.photos,
+                  ),
                 Text(
                   DateFormat.Hm().format(chatMessage.date),
                   style: TextStyle(fontSize: 12),

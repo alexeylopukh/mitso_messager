@@ -13,8 +13,12 @@ class UploadImageRpc {
 
   UploadImageRpc(this.userScope);
 
-  Future<String> upload(File file,
-      {StreamController uploadProgressStreamController, String roomId}) async {
+  Future<String> upload(
+    File file, {
+    StreamController uploadProgressStreamController,
+    String roomId,
+    int isMessage,
+  }) async {
     final fileByteStream = http.ByteStream(Stream.castFrom(file.openRead()));
     final length = file.lengthSync();
     final uri = Uri.parse(API_URL + '/api/upload_photo');
@@ -35,6 +39,7 @@ class UploadImageRpc {
 
     final request = http.MultipartRequest("POST", uri);
     request.fields['token'] = await userScope.authToken();
+    if (isMessage != null) request.fields['is_message'] = "1";
     if (roomId != null) request.fields['room_id'] = roomId;
     final multipartFile = http.MultipartFile('file_name', uploadProgressStream, length,
         filename: path.basename(file.path));

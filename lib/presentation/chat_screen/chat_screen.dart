@@ -7,11 +7,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
 import 'package:messager/objects/typing_user.dart';
+import 'package:messager/objects/upload_image.dart';
 import 'package:messager/presentation/chat_screen/chat_screen_presenter.dart';
 import 'package:messager/presentation/chat_screen/chat_screen_view_model.dart';
+import 'package:messager/presentation/chat_screen/widgets/attach_file_popup.dart';
 import 'package:messager/presentation/chat_screen/widgets/opponent_message_view.dart';
 import 'package:messager/presentation/chat_screen/widgets/typing_message_widget.dart';
+import 'package:messager/presentation/chat_screen/widgets/upload_image_item.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
+import 'package:messager/presentation/components/button_icon.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
@@ -232,88 +236,134 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget inputPanel() {
-    double panelHeight = 70.0;
     var borderRadius = BorderRadius.circular(60);
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).viewInsets.bottom + panelHeight,
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 1,
-          offset: Offset(0, -1),
-        ),
-      ]),
-      child: Stack(
-        fit: StackFit.loose,
-        children: <Widget>[
-          ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: Container(
-                height: MediaQuery.of(context).viewInsets.bottom + panelHeight,
-                color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
+    return StreamBuilder<List<UploadImage>>(
+        stream: _presenter.uploadImages,
+        builder: (context, snapshot) {
+          double panelHeight = 70.0;
+          if (_presenter.uploadImages.value.isNotEmpty) {
+            panelHeight += 50;
+          }
+          return Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).viewInsets.bottom + panelHeight,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 1,
+                offset: Offset(0, -1),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: borderRadius,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: Padding(
-                          padding: EdgeInsets.only(left: 3),
-                          child: TextFormField(
-                            controller: _presenter.messageController,
-                            textCapitalization: TextCapitalization.sentences,
-                            autocorrect: true,
-                            enableInteractiveSelection: true,
-                            cursorColor: CustomTheme.of(context).primaryColor,
-                            decoration: InputDecoration(
-                              hintText: 'Введите сообщение',
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding:
-                                  EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 5),
-                            ),
-                          )),
+            ]),
+            child: Stack(
+              fit: StackFit.loose,
+              children: <Widget>[
+                ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                    child: Container(
+                      height: MediaQuery.of(context).viewInsets.bottom + panelHeight,
+                      color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 0),
-                      child: ClipOval(
-                        child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                                onTap: _presenter.onSendButtonClick,
-                                child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: SizedBox(
-                                          height: 24,
-                                          width: 24,
-                                          child: SvgPicture.asset('assets/icons/ic_send.svg')),
-                                    )))),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      uploadImagePanel(_presenter.uploadImages.value),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            width: 5,
+                          ),
+                          ButtonIcon(
+                            size: 40,
+                            iconSize: 40,
+                            onClick: () async {
+                              PickedFiles pickedFiles = await showAttachFilePopup(context);
+                              if (pickedFiles != null && pickedFiles.files.isNotEmpty)
+                                _presenter.uploadFiles(pickedFiles);
+                            },
+                            image: 'assets/icons/ic_attach.svg',
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: borderRadius,
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Padding(
+                                          padding: EdgeInsets.only(left: 3),
+                                          child: TextFormField(
+                                            controller: _presenter.messageController,
+                                            textCapitalization: TextCapitalization.sentences,
+                                            autocorrect: true,
+                                            enableInteractiveSelection: true,
+                                            cursorColor: CustomTheme.of(context).primaryColor,
+                                            decoration: InputDecoration(
+                                              hintText: 'Введите сообщение',
+                                              border: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                              enabledBorder: InputBorder.none,
+                                              errorBorder: InputBorder.none,
+                                              disabledBorder: InputBorder.none,
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 15, bottom: 11, top: 11, right: 5),
+                                            ),
+                                          )),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 0),
+                                      child: ClipOval(
+                                        child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: _presenter.onSendButtonClick,
+                                                child: Container(
+                                                    width: 50,
+                                                    height: 50,
+                                                    child: Align(
+                                                      alignment: Alignment.center,
+                                                      child: SizedBox(
+                                                          height: 24,
+                                                          width: 24,
+                                                          child: SvgPicture.asset(
+                                                              'assets/icons/ic_send.svg')),
+                                                    )))),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        });
+  }
+
+  Widget uploadImagePanel(List<UploadImage> images) {
+    if (images?.isEmpty ?? true) return Container();
+    return SizedBox(
+      height: 50,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: images.length,
+          itemBuilder: (context, index) => UploadImageItem(
+                uploadImage: images[index],
+              )),
     );
   }
 

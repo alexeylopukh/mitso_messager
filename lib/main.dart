@@ -57,7 +57,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
-  static Widget createMaterialApp(Widget home, UserScopeData userScope) {
+  static MaterialApp createMaterialApp(Widget home, UserScopeData userScope) {
     return MaterialApp(
       title: _title,
       color: Colors.white,

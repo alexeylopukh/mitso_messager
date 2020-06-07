@@ -49,21 +49,26 @@ class SocketInteractor {
     socket.sendData('on_create_news', {"title": title, "text": text, "uuid": Uuid().v4()});
   }
 
-  sendMessage(int roomId, String message) {
+  sendMessage(int roomId, String message, List<String> photos) {
     var chatMessage = ChatMessage(
         roomId: roomId,
         text: message,
         uuid: Uuid().v4(),
         sender: userScope.myProfile,
         date: DateTime.now(),
+        photos: photos ?? [],
         isSended: false);
     _addNewUnsendedMessage(chatMessage);
     _sendMessageWithSocket(chatMessage);
   }
 
   _sendMessageWithSocket(ChatMessage chatMessage) {
-    socket.sendData('on_chat_message',
-        {"room_id": chatMessage.roomId, "uuid": chatMessage.uuid, "text": chatMessage.text});
+    socket.sendData('on_chat_message', {
+      "room_id": chatMessage.roomId,
+      "uuid": chatMessage.uuid,
+      "text": chatMessage.text,
+      "photos": chatMessage.photos
+    });
   }
 
   _appendNewMessage(ChatMessage message) async {

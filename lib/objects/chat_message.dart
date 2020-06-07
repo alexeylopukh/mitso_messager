@@ -8,6 +8,7 @@ class ChatMessage {
   String text;
   DateTime date;
   Profile sender;
+  List<String> photos;
   bool isSended;
 
   ChatMessage(
@@ -18,7 +19,8 @@ class ChatMessage {
       this.text,
       this.date,
       this.sender,
-      this.isSended = true});
+      this.isSended = true,
+      this.photos});
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
       id: json["id"],
@@ -27,9 +29,9 @@ class ChatMessage {
       uuid: json["uuid"],
       text: json["text"],
       date: DateTime.fromMillisecondsSinceEpoch(json["date"] * 1000),
-      sender: json["user"] != null
-          ? Profile.fromJson(json["user"])
-          : Profile.fromJson(json["sender"]),
+      photos: json['photos'] == null ? [] : json['photos'].cast<String>(),
+      sender:
+          json["user"] != null ? Profile.fromJson(json["user"]) : Profile.fromJson(json["sender"]),
       isSended: json["is_sended"] == null ? true : json["is_sended"]);
 
   Map<String, dynamic> toJson() => {
@@ -41,14 +43,13 @@ class ChatMessage {
         "date": date.millisecondsSinceEpoch ~/ 1000,
         "user": sender.toJson(),
         "is_sended": isSended,
+        "photos": photos,
       };
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChatMessage &&
-          runtimeType == other.runtimeType &&
-          uuid == other.uuid;
+      other is ChatMessage && runtimeType == other.runtimeType && uuid == other.uuid;
 
   @override
   int get hashCode => uuid.hashCode;
