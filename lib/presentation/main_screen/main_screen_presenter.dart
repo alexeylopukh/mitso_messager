@@ -55,6 +55,7 @@ class MainScreenPresenter {
   }
 
   dispose() {
+    userScope.socketInteractor.dispose();
     incomingUriStreamSubscription.cancel();
   }
 }

@@ -42,6 +42,11 @@ class UserScopeData {
     yield true;
   }
 
+  Future deauth() {
+    setMyProfile(null);
+    setAuthToken(null);
+  }
+
   Future<String> fcmToken() async {
     return fcmHelper.getFcmToken();
   }

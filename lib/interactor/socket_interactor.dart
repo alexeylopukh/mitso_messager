@@ -32,10 +32,12 @@ class SocketInteractor {
   BehaviorSubject<List<ChatMessage>> unsendedMessages = BehaviorSubject.seeded([]);
   BehaviorSubject<List<NewsModel>> newsModels = BehaviorSubject.seeded([]);
 
+  DateTime lastSendedMessage;
+
   handleNewMessage(ChatMessage message) {
     _tryDeleteUnsentMessage(message);
-    _sendFirstUnsendedMessage();
     _appendNewMessage(message);
+    _sendFirstUnsendedMessage();
   }
 
   appendChatRooms(List<ChatRoom> rooms) {
@@ -60,8 +62,12 @@ class SocketInteractor {
         date: DateTime.now(),
         photos: photos ?? [],
         isSended: false);
-    _addNewUnsendedMessage(chatMessage);
-    _sendMessageWithSocket(chatMessage);
+    if (unsendedMessages.value.isNotEmpty) {
+      _addNewUnsendedMessage(chatMessage);
+    } else {
+      _addNewUnsendedMessage(chatMessage);
+      _sendMessageWithSocket(chatMessage);
+    }
   }
 
   Future<List<ChatMessage>> getChatHistory(int roomId, int messageId) async {
@@ -119,11 +125,20 @@ class SocketInteractor {
   }
 
   _sendFirstUnsendedMessage() async {
-    if (unsendedMessages.value.isEmpty) return;
-    _sendMessageWithSocket(unsendedMessages.value.first);
+    if (lastSendedMessage == null ||
+        DateTime.now().difference(lastSendedMessage).inMilliseconds > 900) {
+      lastSendedMessage = DateTime.now();
+      if (unsendedMessages.value.isEmpty) return;
+      _sendMessageWithSocket(unsendedMessages.value.first);
+    }
+    {
+      await Future.delayed(Duration(milliseconds: 900));
+      _sendFirstUnsendedMessage();
+    }
   }
 
   dispose() {
+    socket.dispose();
     chatRoomStream.close();
     typingUsersStream.close();
     unsendedMessages.close();

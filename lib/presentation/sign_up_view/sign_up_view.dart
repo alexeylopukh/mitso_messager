@@ -20,8 +20,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_presenter == null)
-      _presenter = SignUpPresenter(UserScopeWidget.of(context));
+    if (_presenter == null) _presenter = SignUpPresenter(UserScopeWidget.of(context));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: StreamBuilder<SignInViewModel>(
@@ -85,8 +84,7 @@ class _SignUpViewState extends State<SignUpView> {
                 CustomButton(
                   child: viewModel.networkOperation
                       ? CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           strokeWidth: 2.0,
                         )
                       : Text(
@@ -94,8 +92,7 @@ class _SignUpViewState extends State<SignUpView> {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
-                              fontFamily:
-                                  CustomTheme.of(context).boldFontFamily),
+                              fontFamily: CustomTheme.of(context).boldFontFamily),
                         ),
                   height: 50,
                   width: double.infinity,
@@ -117,8 +114,7 @@ class _SignUpViewState extends State<SignUpView> {
                     children: <Widget>[
                       Text(
                         'Уже есть аккаунт?',
-                        style:
-                            TextStyle(color: CustomTheme.of(context).grayColor),
+                        style: TextStyle(color: CustomTheme.of(context).grayColor),
                       ),
                       Container(
                         height: 3,
@@ -138,8 +134,7 @@ class _SignUpViewState extends State<SignUpView> {
 
   showErrorDialog(String text) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Popups.showModalDialog(context, PopupState.OK,
-          title: 'Ошибка', description: text);
+      Popups.showModalDialog(context, PopupState.OK, title: 'Ошибка', description: text);
     });
   }
 

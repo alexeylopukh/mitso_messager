@@ -41,6 +41,7 @@ class SocketHelper {
   ValueStream<bool> get isSocketAuthStream => _isSocketAuth.stream;
 
   sendData(String event, Map<String, dynamic> data) {
+    print('sended');
     _socket.emit(event, jsonEncode(data));
   }
 
@@ -143,6 +144,11 @@ class SocketHelper {
       userScope.socketInteractor.newsModels.add(news);
     });
     _socket.on('on_create_news', (data) => {sendData('on_news', {})});
+    _socket.on(
+        'on_error',
+        (data) => {
+              if (data is String && data.toLowerCase() == 'not valid token') {userScope.deauth()}
+            });
   }
 
   connect() {
@@ -150,6 +156,7 @@ class SocketHelper {
   }
 
   dispose() {
+    _socket.disconnect();
     _isSocketAuth.close();
     disconnect();
   }
