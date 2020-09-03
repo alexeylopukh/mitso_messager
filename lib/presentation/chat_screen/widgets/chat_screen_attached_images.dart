@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/presentation/view_images_screen/view_images_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants.dart';
 
@@ -49,14 +51,14 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
   }
 
   Widget layout1() {
-    return createContainer(width, imageKeys[0]);
+    return createContainer(width, 0);
   }
 
   Widget layout2() {
     return Row(
       children: <Widget>[
-        createContainer(width / 2, imageKeys[0]),
-        createContainer(width / 2, imageKeys[1]),
+        createContainer(width / 2, 0),
+        createContainer(width / 2, 1),
       ],
     );
   }
@@ -64,11 +66,11 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
   Widget layout3() {
     return Column(
       children: <Widget>[
-        createContainer(width, imageKeys[0]),
+        createContainer(width, 0),
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[1]),
-            createContainer(width / 2, imageKeys[2]),
+            createContainer(width / 2, 1),
+            createContainer(width / 2, 2),
           ],
         ),
       ],
@@ -80,14 +82,14 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[0]),
-            createContainer(width / 2, imageKeys[1]),
+            createContainer(width / 2, 0),
+            createContainer(width / 2, 1),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[2]),
-            createContainer(width / 2, imageKeys[3]),
+            createContainer(width / 2, 2),
+            createContainer(width / 2, 3),
           ],
         ),
       ],
@@ -99,15 +101,15 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[0]),
-            createContainer(width / 2, imageKeys[1]),
+            createContainer(width / 2, 0),
+            createContainer(width / 2, 1),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[2]),
-            createContainer(width / 3, imageKeys[3]),
-            createContainer(width / 3, imageKeys[4])
+            createContainer(width / 3, 2),
+            createContainer(width / 3, 3),
+            createContainer(width / 3, 4)
           ],
         ),
       ],
@@ -119,16 +121,16 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[0]),
-            createContainer(width / 3, imageKeys[1]),
-            createContainer(width / 3, imageKeys[2]),
+            createContainer(width / 3, 0),
+            createContainer(width / 3, 1),
+            createContainer(width / 3, 2),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[3]),
-            createContainer(width / 3, imageKeys[4]),
-            createContainer(width / 3, imageKeys[5]),
+            createContainer(width / 3, 3),
+            createContainer(width / 3, 4),
+            createContainer(width / 3, 5),
           ],
         ),
       ],
@@ -140,21 +142,21 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[0]),
-            createContainer(width / 2, imageKeys[1]),
+            createContainer(width / 2, 0),
+            createContainer(width / 2, 1),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[2]),
-            createContainer(width / 2, imageKeys[3]),
+            createContainer(width / 2, 2),
+            createContainer(width / 2, 3),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[4]),
-            createContainer(width / 3, imageKeys[5]),
-            createContainer(width / 3, imageKeys[6]),
+            createContainer(width / 3, 4),
+            createContainer(width / 3, 5),
+            createContainer(width / 3, 6),
           ],
         ),
       ],
@@ -166,22 +168,22 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 2, imageKeys[0]),
-            createContainer(width / 2, imageKeys[1]),
+            createContainer(width / 2, 0),
+            createContainer(width / 2, 1),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[2]),
-            createContainer(width / 3, imageKeys[3]),
-            createContainer(width / 3, imageKeys[4]),
+            createContainer(width / 3, 2),
+            createContainer(width / 3, 3),
+            createContainer(width / 3, 4),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[5]),
-            createContainer(width / 3, imageKeys[6]),
-            createContainer(width / 3, imageKeys[7]),
+            createContainer(width / 3, 5),
+            createContainer(width / 3, 6),
+            createContainer(width / 3, 7),
           ],
         ),
       ],
@@ -193,23 +195,23 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[0]),
-            createContainer(width / 3, imageKeys[1]),
-            createContainer(width / 3, imageKeys[2]),
+            createContainer(width / 3, 0),
+            createContainer(width / 3, 1),
+            createContainer(width / 3, 2),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[3]),
-            createContainer(width / 3, imageKeys[4]),
-            createContainer(width / 3, imageKeys[5]),
+            createContainer(width / 3, 3),
+            createContainer(width / 3, 4),
+            createContainer(width / 3, 5),
           ],
         ),
         Row(
           children: <Widget>[
-            createContainer(width / 3, imageKeys[6]),
-            createContainer(width / 3, imageKeys[7]),
-            createContainer(width / 3, imageKeys[8]),
+            createContainer(width / 3, 6),
+            createContainer(width / 3, 7),
+            createContainer(width / 3, 8),
           ],
         ),
       ],
@@ -223,15 +225,15 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
           children: <Widget>[
             createContainer(
               width / 3,
-              imageKeys[0],
+              0,
             ),
             createContainer(
               width / 3,
-              imageKeys[1],
+              1,
             ),
             createContainer(
               width / 3,
-              imageKeys[2],
+              2,
             ),
           ],
         ),
@@ -239,15 +241,15 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
           children: <Widget>[
             createContainer(
               width / 3,
-              imageKeys[3],
+              3,
             ),
             createContainer(
               width / 3,
-              imageKeys[4],
+              4,
             ),
             createContainer(
               width / 3,
-              imageKeys[5],
+              5,
             ),
           ],
         ),
@@ -255,19 +257,19 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
           children: <Widget>[
             createContainer(
               width / 4,
-              imageKeys[6],
+              6,
             ),
             createContainer(
               width / 4,
-              imageKeys[7],
+              7,
             ),
             createContainer(
               width / 4,
-              imageKeys[8],
+              8,
             ),
             createContainer(
               width / 4,
-              imageKeys[9],
+              9,
             )
           ],
         ),
@@ -275,13 +277,45 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
     );
   }
 
-  Widget createContainer(double width, String url) {
-    return Padding(
-      padding: EdgeInsets.all(0.5),
-      child: Container(
-        width: width,
-        height: width,
-        decoration: decoration(url),
+  Widget createContainer(double width, int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+          return ViewImagesScreen(
+            imageKeys: imageKeys,
+            initalPage: index,
+          );
+        }));
+      },
+      child: Padding(
+        padding: EdgeInsets.all(0.5),
+        child: SizedBox(
+          height: width,
+          width: width,
+          child: Hero(
+            tag: imageKeys[index],
+            child: CachedNetworkImage(
+              imageUrl: API_URL + '/' + imageKeys[index],
+              fit: BoxFit.cover,
+              repeat: ImageRepeat.repeat,
+              placeholder: (c, s) {
+                return SizedBox(
+                  height: width,
+                  width: width,
+                  child: Shimmer.fromColors(
+                    child: Container(
+                      height: width,
+                      width: width,
+                      color: Color(0xffE9E9E9),
+                    ),
+                    baseColor: Color(0xffE9E9E9),
+                    highlightColor: Colors.grey[350],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -292,7 +326,9 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
             ? null
             : DecorationImage(
                 fit: BoxFit.cover,
-                image: CachedNetworkImageProvider(API_URL + '/' + key),
+                image: CachedNetworkImageProvider(
+                  API_URL + '/' + key,
+                ),
               ));
   }
 }
