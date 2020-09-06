@@ -45,15 +45,15 @@ class _AuthScreenState extends State<AuthScreen> {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: CustomElevation(
-                    height: 120,
-                    child: SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: SvgPicture.asset('assets/images/app_icon.svg')),
-                  ),
+                Container(
+                    height: MediaQuery.of(context).systemGestureInsets.top +
+                        MediaQuery.of(context).padding.top),
+                CustomElevation(
+                  height: 120,
+                  child: SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: SvgPicture.asset('assets/images/app_icon.svg')),
                 ),
                 Expanded(
                   child: PageView(
