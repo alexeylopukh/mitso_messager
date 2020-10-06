@@ -240,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return StreamBuilder<List<UploadImage>>(
         stream: _presenter.uploadImages,
         builder: (context, snapshot) {
-          double panelHeight = 70.0;
+          double panelHeight = 70.0 + MediaQuery.of(context).padding.bottom;
           if (_presenter.uploadImages.value.isNotEmpty) {
             panelHeight += 50;
           }
@@ -261,13 +261,17 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
                     child: Container(
-                      height: MediaQuery.of(context).viewInsets.bottom + panelHeight,
+                      height: MediaQuery.of(context).padding.bottom +
+                          MediaQuery.of(context).viewInsets.bottom +
+                          panelHeight,
                       color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).padding.bottom +
+                          MediaQuery.of(context).viewInsets.bottom),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

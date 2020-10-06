@@ -25,6 +25,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   bool isAvatarUploaded = false;
   File uploadedImage;
   String uploadedAvatarKey;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +34,32 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: TextFormField(
-                controller: nameController,
-                textCapitalization: TextCapitalization.sentences,
-                autocorrect: true,
-                enableInteractiveSelection: true,
-                cursorColor: CustomTheme.of(context).primaryColor,
-                decoration: InputDecoration(
-                  hintText: 'Название',
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  contentPadding:
-                      EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 5),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, bottom: 20),
+                child: TextFormField(
+                  controller: nameController,
+                  textCapitalization: TextCapitalization.sentences,
+                  autocorrect: true,
+                  validator: (String value) {
+                    if (value.trim().isEmpty) {
+                      return 'Название не может быть пустым';
+                    } else
+                      return null;
+                  },
+                  autofocus: true,
+                  enableInteractiveSelection: true,
+                  cursorColor: CustomTheme.of(context).primaryColor,
+                  decoration: InputDecoration(
+                    hintText: 'Название',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.only(left: 15, bottom: 0, top: 11, right: 5),
+                  ),
                 ),
               ),
             ),
@@ -57,7 +67,9 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
             Spacer(),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom + 10,
+                  bottom: MediaQuery.of(context).padding.bottom +
+                      MediaQuery.of(context).viewInsets.bottom +
+                      10,
                   left: 20,
                   right: 20),
               child: CustomButton(
@@ -77,7 +89,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                 width: double.infinity,
                 onTap: () {
                   if (!isNetworkOperation) {
-                    createRoom();
+                    createRoom(context);
                   }
                 },
               ),
@@ -106,8 +118,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                     shape: BoxShape.circle,
                     color: CustomTheme.of(context).primaryColor,
                     image: uploadedImage != null
-                        ? DecorationImage(
-                            fit: BoxFit.cover, image: FileImage(uploadedImage))
+                        ? DecorationImage(fit: BoxFit.cover, image: FileImage(uploadedImage))
                         : null,
                   ),
                   child: Container(),
@@ -163,14 +174,12 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     uploadedImage = file;
     isAvatarUploaded = true;
     update();
-    String avatarKey = await UploadImageRpc(UserScopeWidget.of(context))
-        .upload(file, roomId: '0')
-        .catchError((e) {
+    String avatarKey =
+        await UploadImageRpc(UserScopeWidget.of(context)).upload(file, roomId: '0').catchError((e) {
       if (e is UploadImageRpcException)
         Popups.showModalDialog(context, PopupState.OK, description: e.message);
       else
-        Popups.showModalDialog(context, PopupState.OK,
-            description: UNKNOWN_ERROR_MESSAGE);
+        Popups.showModalDialog(context, PopupState.OK, description: UNKNOWN_ERROR_MESSAGE);
       uploadedImage = null;
     });
     isAvatarUploaded = false;
@@ -180,20 +189,20 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     }
   }
 
-  createRoom() async {
-    if (nameController.value.text.trim().isEmpty) return;
+  void createRoom(BuildContext context) async {
+    if (!_formKey.currentState.validate()) {
+      await Popups.showModalDialog(context, PopupState.OK, description: "Заполните название");
+      return;
+    }
     isNetworkOperation = true;
     update();
     var socket = UserScopeWidget.of(context).socketHelper;
 
-    socket.sendData('on_create_room', {
-      'room_name': nameController.value.text.trim(),
-      'thumb_image_key': uploadedAvatarKey
-    });
+    socket.sendData('on_create_room',
+        {'room_name': nameController.value.text.trim(), 'thumb_image_key': uploadedAvatarKey});
     socket.createRoomCompleter = Completer();
-    bool result = await socket.createRoomCompleter.future
-        .timeout(Duration(seconds: 3))
-        .catchError((e) {
+    bool result =
+        await socket.createRoomCompleter.future.timeout(Duration(seconds: 3)).catchError((e) {
       //ignore
     });
     isNetworkOperation = false;
