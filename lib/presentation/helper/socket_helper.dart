@@ -141,6 +141,11 @@ class SocketHelper {
     });
     _socket.on('on_news', (data) {
       final news = List<NewsModel>.from(data.map((x) => NewsModel.fromJson(x)));
+      if (news?.isNotEmpty == true) {
+        news.removeWhere((element) {
+          return element?.title?.isEmpty == true && element?.text?.isEmpty == true;
+        });
+      }
       userScope.socketInteractor.newsModels.add(news);
     });
     _socket.on('on_create_news', (data) => {sendData('on_news', {})});
