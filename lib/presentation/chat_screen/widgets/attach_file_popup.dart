@@ -25,10 +25,12 @@ Future<PickedFiles> showAttachFilePopup(BuildContext context) async {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 _buildPopupItem('Фото из галереи', context, () async {
-                  List<File> files = await FilePicker.getMultiFile(
-                    type: FileType.image,
-                  );
-                  if (files != null) pickedFiles = PickedFiles(files, PickFileType.Image);
+                  FilePickerResult result = await FilePicker.platform
+                      .pickFiles(type: FileType.image, allowMultiple: true);
+                  if (result != null) {
+                    List<File> files = result.paths.map((path) => File(path)).toList();
+                    pickedFiles = PickedFiles(files, PickFileType.Image);
+                  }
                   Navigator.pop(context);
                 }),
                 _buildPopupItem('Сделать фото', context, () async {

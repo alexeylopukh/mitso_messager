@@ -26,7 +26,9 @@ class SignInRpc {
       if (parsedResponse.token != null) {
         return parsedResponse;
       }
-    } else
+    } else if (response.statusCode == 401)
+      throw SignInRpcException(code: SignInRpcExceptionCode.InvalidEmailOrPassword);
+    else
       throw SignInRpcException(code: SignInRpcExceptionCode.InternalError);
     throw SignInRpcException(code: SignInRpcExceptionCode.InternalError);
   }
@@ -41,8 +43,7 @@ class SignInRpcResponse {
     this.profile,
   });
 
-  factory SignInRpcResponse.fromJson(Map<String, dynamic> json) =>
-      SignInRpcResponse(
+  factory SignInRpcResponse.fromJson(Map<String, dynamic> json) => SignInRpcResponse(
         token: json["token"],
         profile: Profile.fromJson(json["profile"]),
       );
@@ -53,7 +54,7 @@ class SignInRpcResponse {
       };
 }
 
-enum SignInRpcExceptionCode { InternalError, CommunicationError, Timeout }
+enum SignInRpcExceptionCode { InternalError, CommunicationError, Timeout, InvalidEmailOrPassword }
 
 class SignInRpcException implements Exception {
   SignInRpcExceptionCode code;
@@ -69,6 +70,9 @@ class SignInRpcException implements Exception {
         break;
       case SignInRpcExceptionCode.Timeout:
         message = TIMEOUT_ERROR_MESSAGE;
+        break;
+      case SignInRpcExceptionCode.InvalidEmailOrPassword:
+        message = "Неправильный логин или пароль";
         break;
     }
   }

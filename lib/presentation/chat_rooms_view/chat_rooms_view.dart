@@ -51,6 +51,7 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
                 }
                 return Expanded(
                   child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom +
                               MediaQuery.of(context).padding.bottom +

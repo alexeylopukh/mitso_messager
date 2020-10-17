@@ -375,38 +375,37 @@ class _ChatScreenState extends State<ChatScreen> {
     List<ChatMessage> messages = [];
     messages.addAll(viewModel.unsendedMessages);
     messages.addAll(viewModel.chatRoom.messages);
-    return ScrollConfiguration(
-      behavior: ScrollBehavior(),
-      child: ListView.builder(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top + 55,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 65,
-        ),
-        reverse: true,
-        itemCount: messages.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0)
-            return StreamBuilder<TypingUser>(
-                stream: UserScopeWidget.of(context).socketInteractor.typingUsersStream,
-                builder: (context, snapshot) {
-                  TypingUser typingUser = snapshot.data;
-                  if (typingUser != null &&
-                      (!typingUser.isTyping || typingUser.roomId != _presenter.roomId))
-                    typingUser = null;
-                  return TypingMessageWidget(
-                    typingUser: typingUser,
-                  );
-                });
-          if (index == messages.length) _presenter.loadChatHistory();
-          if (messages[index - 1].sender.id == UserScopeWidget.of(context).myProfile.id)
-            return OwnMessageView(
-              chatMessage: messages[index - 1],
-            );
-          return OpponentMessageView(
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 55,
+        bottom:
+            MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom + 65,
+      ),
+      reverse: true,
+      itemCount: messages.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0)
+          return StreamBuilder<TypingUser>(
+              stream: UserScopeWidget.of(context).socketInteractor.typingUsersStream,
+              builder: (context, snapshot) {
+                TypingUser typingUser = snapshot.data;
+                if (typingUser != null &&
+                    (!typingUser.isTyping || typingUser.roomId != _presenter.roomId))
+                  typingUser = null;
+                return TypingMessageWidget(
+                  typingUser: typingUser,
+                );
+              });
+        if (index == messages.length) _presenter.loadChatHistory();
+        if (messages[index - 1].sender.id == UserScopeWidget.of(context).myProfile.id)
+          return OwnMessageView(
             chatMessage: messages[index - 1],
           );
-        },
-      ),
+        return OpponentMessageView(
+          chatMessage: messages[index - 1],
+        );
+      },
     );
   }
 

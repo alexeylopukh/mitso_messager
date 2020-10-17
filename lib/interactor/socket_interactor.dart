@@ -130,8 +130,7 @@ class SocketInteractor {
       lastSendedMessage = DateTime.now();
       if (unsendedMessages.value.isEmpty) return;
       _sendMessageWithSocket(unsendedMessages.value.first);
-    }
-    {
+    } else {
       await Future.delayed(Duration(milliseconds: 900));
       _sendFirstUnsendedMessage();
     }

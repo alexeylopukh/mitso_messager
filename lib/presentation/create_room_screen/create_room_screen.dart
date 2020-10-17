@@ -144,10 +144,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
             onTap: () async {
-              File file = await FilePicker.getFile(type: FileType.image);
-              if (file == null) return;
+              FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.image);
+              if (result == null) return;
               File croppedFile = await ImageCropper.cropImage(
-                  sourcePath: file.path,
+                  sourcePath: result.files.single.path,
                   aspectRatio: CropAspectRatio(ratioX: 1.0, ratioY: 1.0),
                   maxWidth: 512,
                   maxHeight: 512,
