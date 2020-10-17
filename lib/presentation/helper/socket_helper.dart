@@ -107,7 +107,7 @@ class SocketHelper {
     _socket.on('on_rooms', (value) {
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       socketInteractor.appendChatRooms(rooms);
-      if (chatHistoryCompleter != null) {
+      if (chatHistoryCompleter != null && !chatHistoryCompleter.isCompleted) {
         chatHistoryCompleter.complete(true);
       }
     });

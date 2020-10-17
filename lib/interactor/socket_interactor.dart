@@ -73,8 +73,7 @@ class SocketInteractor {
   Future<List<ChatMessage>> getChatHistory(int roomId, int messageId) async {
     print('get');
     socket.getChatMessagesCompleter = Completer();
-    socket.sendData(
-        'get_chat_message', {"room_id": roomId, "limit": 50, "last_message_id": messageId});
+    socket.sendData('get_chat_message', {"room_id": roomId, "limit": 50, "last_message_id": null});
     List<ChatMessage> messages =
         await socket.getChatMessagesCompleter.future.timeout(Duration(seconds: 3));
     socket.chatHistoryCompleter = null;
