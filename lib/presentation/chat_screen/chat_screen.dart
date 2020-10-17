@@ -171,6 +171,11 @@ class _ChatScreenState extends State<ChatScreen> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        if (chatRoom.id != 1)
+          Padding(
+            padding: const EdgeInsets.only(left: 50, right: 50, top: 5),
+            child: Text('id комнаты: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
+          ),
         Material(
           color: Colors.transparent,
           child: InkWell(

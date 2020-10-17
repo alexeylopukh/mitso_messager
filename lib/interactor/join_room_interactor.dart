@@ -7,7 +7,7 @@ class JoinRoomInteractor {
 
   JoinRoomInteractor(this.userScope);
 
-  join(int roomId) async {
+  Future join(int roomId) async {
     userScope.socketHelper.joinChatCompleter = Completer();
     userScope.socketHelper.sendData('on_join_chat', {"room_id": roomId});
     var result = await userScope.socketHelper.joinChatCompleter.future
@@ -16,8 +16,7 @@ class JoinRoomInteractor {
     if (result != null) {
       userScope.socketHelper.chatHistoryCompleter = Completer();
       userScope.socketHelper.sendData('on_rooms', {});
-      bool isRoomsUpdated = await userScope
-          .socketHelper.chatHistoryCompleter.future
+      bool isRoomsUpdated = await userScope.socketHelper.chatHistoryCompleter.future
           .timeout(Duration(seconds: 3))
           .catchError((e) {});
       if (isRoomsUpdated) {

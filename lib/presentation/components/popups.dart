@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 
@@ -40,8 +42,7 @@ class Popups {
                   ),
                 ),
                 Container(
-                    padding:
-                        EdgeInsets.only(top: 25.0, left: 21.0, right: 21.0),
+                    padding: EdgeInsets.only(top: 25.0, left: 21.0, right: 21.0),
                     child: Text(
                       title,
                       textAlign: TextAlign.center,
@@ -77,8 +78,7 @@ class Popups {
                             style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
-                                fontFamily:
-                                    CustomTheme.of(context).boldFontFamily),
+                                fontFamily: CustomTheme.of(context).boldFontFamily),
                           ),
                         ),
                       )
@@ -93,14 +93,11 @@ class Popups {
                                 onPressed: () => Navigator.pop(context, true),
                                 color: CustomTheme.of(context).primaryColor,
                                 child: Text(
-                                  confirmBtnLabel == null
-                                      ? 'YES'
-                                      : confirmBtnLabel,
+                                  confirmBtnLabel == null ? 'YES' : confirmBtnLabel,
                                   style: TextStyle(
                                       fontSize: 18.0,
                                       color: Colors.white,
-                                      fontFamily: CustomTheme.of(context)
-                                          .boldFontFamily),
+                                      fontFamily: CustomTheme.of(context).boldFontFamily),
                                 ),
                               ),
                             ),
@@ -110,15 +107,11 @@ class Popups {
                               child: Container(
                                 margin: EdgeInsets.only(top: 19.0),
                                 child: Text(
-                                  discardBtnLabel == null
-                                      ? 'NO'
-                                      : discardBtnLabel,
+                                  discardBtnLabel == null ? 'NO' : discardBtnLabel,
                                   style: TextStyle(
                                       fontSize: 18.0,
-                                      color:
-                                          CustomTheme.of(context).primaryColor,
-                                      fontFamily: CustomTheme.of(context)
-                                          .boldFontFamily),
+                                      color: CustomTheme.of(context).primaryColor,
+                                      fontFamily: CustomTheme.of(context).boldFontFamily),
                                 ),
                               ),
                             )
@@ -147,8 +140,7 @@ class Popups {
           return Container(
             child: AlertDialog(
               backgroundColor: CustomTheme.of(context).backgroundColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
               title: title != null && title.isNotEmpty
                   ? Text(
                       title,
@@ -167,8 +159,7 @@ class Popups {
                   children: <Widget>[
                     description != null
                         ? Container(
-                            padding: EdgeInsets.only(
-                                top: 6.0, left: 19.0, right: 19.0),
+                            padding: EdgeInsets.only(top: 6.0, left: 19.0, right: 19.0),
                             child: Text(
                               description,
                               textAlign: TextAlign.center,
@@ -181,8 +172,7 @@ class Popups {
                         : Container(),
                     Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(16.0))),
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.0))),
                       child: Row(
                         children: <Widget>[
                           state == PopupState.OK
@@ -193,15 +183,14 @@ class Popups {
                                     child: RaisedButton(
                                       onPressed: () => Navigator.pop(context),
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                              bottom: Radius.circular(16.0))),
+                                          borderRadius:
+                                              BorderRadius.vertical(bottom: Radius.circular(16.0))),
                                       color: buttonColor == null
                                           ? CustomTheme.of(context).primaryColor
                                           : buttonColor,
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
                                             confirmBtnLabel == null
@@ -210,9 +199,7 @@ class Popups {
                                             style: TextStyle(
                                                 fontSize: 18.0,
                                                 color: Colors.white,
-                                                fontFamily:
-                                                    CustomTheme.of(context)
-                                                        .boldFontFamily),
+                                                fontFamily: CustomTheme.of(context).boldFontFamily),
                                           ),
                                         ],
                                       ),
@@ -227,32 +214,24 @@ class Popups {
                                           margin: EdgeInsets.only(top: 31.0),
                                           height: 56.0,
                                           child: RaisedButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, false),
+                                            onPressed: () => Navigator.pop(context, false),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(16.0))),
+                                                    bottomLeft: Radius.circular(16.0))),
                                             color: Colors.white,
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Text(
                                                   discardBtnLabel == null
                                                       ? 'NO'
-                                                      : discardBtnLabel
-                                                          .toUpperCase(),
+                                                      : discardBtnLabel.toUpperCase(),
                                                   style: TextStyle(
                                                       fontSize: 18.0,
-                                                      color: CustomTheme.of(
-                                                              context)
-                                                          .grayColor,
+                                                      color: CustomTheme.of(context).grayColor,
                                                       fontFamily:
-                                                          CustomTheme.of(
-                                                                  context)
-                                                              .boldFontFamily),
+                                                          CustomTheme.of(context).boldFontFamily),
                                                 ),
                                               ],
                                             ),
@@ -264,33 +243,26 @@ class Popups {
                                           margin: EdgeInsets.only(top: 31.0),
                                           height: 56.0,
                                           child: RaisedButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
+                                            onPressed: () => Navigator.pop(context, true),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.only(
-                                                    bottomRight:
-                                                        Radius.circular(16.0))),
+                                                    bottomRight: Radius.circular(16.0))),
                                             color: buttonColor == null
-                                                ? CustomTheme.of(context)
-                                                    .primaryColor
+                                                ? CustomTheme.of(context).primaryColor
                                                 : buttonColor,
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Text(
                                                   confirmBtnLabel == null
                                                       ? 'YES'
-                                                      : confirmBtnLabel
-                                                          .toUpperCase(),
+                                                      : confirmBtnLabel.toUpperCase(),
                                                   style: TextStyle(
                                                       fontSize: 18.0,
                                                       color: Colors.white,
                                                       fontFamily:
-                                                          CustomTheme.of(
-                                                                  context)
-                                                              .boldFontFamily),
+                                                          CustomTheme.of(context).boldFontFamily),
                                                 ),
                                               ],
                                             ),
@@ -309,5 +281,34 @@ class Popups {
             ),
           );
         });
+  }
+
+  static Future<dynamic> showProgressPopup(BuildContext context, Future future) async {
+    dynamic result;
+    Completer completer = Completer();
+    future.catchError((e) {}).then((r) {
+      if (!completer.isCompleted) {
+        result = r;
+        Navigator.of(context, rootNavigator: true).pop();
+        completer.complete();
+      }
+    });
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        child: Center(
+          child: Container(
+            width: 40,
+            height: 40,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(CustomTheme.of(context).primaryColor),
+              strokeWidth: 2,
+            ),
+          ),
+        ));
+    if (!completer.isCompleted) {
+      completer.complete();
+    }
+    return result;
   }
 }

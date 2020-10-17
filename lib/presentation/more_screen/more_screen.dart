@@ -12,6 +12,7 @@ import 'package:messager/presentation/create_room_screen/create_room_screen.dart
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/incoming_uri_helper.dart';
+import 'package:messager/presentation/more_screen/widget/input_chat_id_view.dart';
 
 import 'widget/more_screen_avatar_view.dart';
 
@@ -62,15 +63,12 @@ class _MoreScreenState extends State<MoreScreen> {
                 }));
                 if (result.rawContent != null && result.rawContent.isNotEmpty) {
                   Uri uri = Uri.parse(result.rawContent);
-                  IncomingUriHelperData data =
-                      IncomingUriHelper().incomingUriHandler(uri);
+                  IncomingUriHelperData data = IncomingUriHelper().incomingUriHandler(uri);
                   if (data == null) return;
                   if (data.type == IncomingUriType.JoinRoom) {
                     IncomingUriJoinRoomData uriJoinRoomData = data;
-                    if (uriJoinRoomData.uuid != null &&
-                        uriJoinRoomData.roomId != null) {
-                      JoinRoomInteractor(UserScopeWidget.of(context))
-                          .join(uriJoinRoomData.roomId);
+                    if (uriJoinRoomData.uuid != null && uriJoinRoomData.roomId != null) {
+                      JoinRoomInteractor(UserScopeWidget.of(context)).join(uriJoinRoomData.roomId);
                     }
                   }
                 } else
@@ -95,11 +93,9 @@ class _MoreScreenState extends State<MoreScreen> {
                           child: SizedBox(
                               height: 34,
                               width: 34,
-                              child:
-                                  SvgPicture.asset('assets/icons/ic_qr.svg')),
+                              child: SvgPicture.asset('assets/icons/ic_qr.svg')),
                         )),
-                    Text('Присоединиться к чату по QR',
-                        style: TextStyle(fontSize: 20)),
+                    Text('Присоединиться к чату по QR', style: TextStyle(fontSize: 20)),
                   ],
                 ),
               ),
@@ -109,8 +105,8 @@ class _MoreScreenState extends State<MoreScreen> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () async {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CreateRoomScreen()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => CreateRoomScreen()));
               },
               child: Container(
                 width: double.infinity,
@@ -126,8 +122,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           child: SizedBox(
                               height: 34,
                               width: 34,
-                              child:
-                                  SvgPicture.asset('assets/icons/ic_qr.svg')),
+                              child: SvgPicture.asset('assets/icons/ic_qr.svg')),
                         )),
                     Text('Создать чат', style: TextStyle(fontSize: 20)),
                   ],
@@ -135,6 +130,35 @@ class _MoreScreenState extends State<MoreScreen> {
               ),
             ),
           ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return InputChatIdView();
+                    });
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                        width: 50,
+                        height: 50,
+                        child: Icon(
+                          Icons.exit_to_app,
+                          size: 28,
+                        )),
+                    Text('Присоединиться к чату по ID', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

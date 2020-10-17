@@ -67,7 +67,7 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
                   width: 0,
                 ),
                 if (chatMessage.text.isNotEmpty)
-                  Linkify(
+                  SelectableLinkify(
                       text: chatMessage.text,
                       style: TextStyle(fontSize: 16),
                       linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
