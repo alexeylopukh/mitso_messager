@@ -402,7 +402,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   typingUser: typingUser,
                 );
               });
-        if (index == messages.length) _presenter.loadChatHistory();
+        if (index == messages.length && messages.isNotEmpty && messages.length > 45)
+          _presenter.loadChatHistory();
         if (messages[index - 1].sender.id == UserScopeWidget.of(context).myProfile.id)
           return OwnMessageView(
             chatMessage: messages[index - 1],

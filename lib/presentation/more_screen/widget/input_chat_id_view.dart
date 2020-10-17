@@ -38,7 +38,7 @@ class _InputChatIdViewState extends State<InputChatIdView> {
                       strokeWidth: 2.0,
                     )
                   : Text(
-                      'Создать',
+                      'Присоединиться',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
