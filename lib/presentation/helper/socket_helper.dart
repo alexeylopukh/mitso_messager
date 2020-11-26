@@ -41,7 +41,6 @@ class SocketHelper {
   ValueStream<bool> get isSocketAuthStream => _isSocketAuth.stream;
 
   sendData(String event, Map<String, dynamic> data) {
-    print('sended');
     _socket.emit(event, jsonEncode(data));
   }
 
@@ -84,9 +83,10 @@ class SocketHelper {
     });
     _socket.on('ping', (value) async {
       _pingCompleter = Completer();
-      _pingCompleter.future.timeout(Duration(seconds: 3), onTimeout: () {
-        print('Ping timeoute');
+      _pingCompleter.future.timeout(Duration(seconds: 5), onTimeout: () {
+        print('Ping timeout');
         _socket.disconnect();
+        connect();
       });
     });
     _socket.on('pong', (value) {

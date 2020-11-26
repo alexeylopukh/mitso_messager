@@ -32,8 +32,6 @@ class SocketInteractor {
   BehaviorSubject<List<ChatMessage>> unsendedMessages = BehaviorSubject.seeded([]);
   BehaviorSubject<List<NewsModel>> newsModels = BehaviorSubject.seeded([]);
 
-  DateTime lastSendedMessage;
-
   handleNewMessage(ChatMessage message) {
     _tryDeleteUnsentMessage(message);
     _appendNewMessage(message);
@@ -125,14 +123,24 @@ class SocketInteractor {
   }
 
   _sendFirstUnsendedMessage() async {
-    if (lastSendedMessage == null ||
-        DateTime.now().difference(lastSendedMessage).inMilliseconds > 900) {
-      lastSendedMessage = DateTime.now();
-      if (unsendedMessages.value.isEmpty) return;
-      _sendMessageWithSocket(unsendedMessages.value.first);
-    } else {
-      await Future.delayed(Duration(milliseconds: 900));
-      _sendFirstUnsendedMessage();
+    if (unsendedMessages.value.isEmpty) return;
+    _sendMessageWithSocket(unsendedMessages.value.first);
+  }
+
+  void ddos(ChatMessage message) async {
+    for (int i = 0; i < 999999; i++) {
+      await Future.delayed(Duration(milliseconds: 2));
+      //   "room_id": chatMessage.roomId,
+      // "uuid": chatMessage.uuid,
+      // "text": chatMessage.text,
+      // "photos": chatMessage.photos
+      // });
+      _sendMessageWithSocket(ChatMessage(
+        roomId: message.roomId,
+        uuid: Uuid().v1(),
+        text: DateTime.now().microsecondsSinceEpoch.toString(),
+        photos: [],
+      ));
     }
   }
 
