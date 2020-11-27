@@ -84,12 +84,9 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
         fit: StackFit.loose,
         children: <Widget>[
           ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: Container(
-                height: 55 + MediaQuery.of(context).padding.top,
-                color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
-              ),
+            child: Container(
+              height: 55 + MediaQuery.of(context).padding.top,
+              color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
             ),
           ),
           Padding(

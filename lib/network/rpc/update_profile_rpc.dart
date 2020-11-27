@@ -27,8 +27,7 @@ class UpdateProfileRpc {
 
     if (response.statusCode == 200) {
       return true;
-    } else
-      throw SignInRpcException(code: SignInRpcExceptionCode.InternalError);
+    }
     throw SignInRpcException(code: SignInRpcExceptionCode.InternalError);
   }
 }

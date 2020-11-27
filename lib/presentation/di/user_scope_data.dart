@@ -42,7 +42,7 @@ class UserScopeData {
     yield true;
   }
 
-  Future deauth() {
+  void deauth() {
     setMyProfile(null);
     setAuthToken(null);
   }

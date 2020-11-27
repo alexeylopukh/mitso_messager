@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -13,34 +14,40 @@ import 'package:messager/presentation/chat_screen/chat_screen_view_model.dart';
 import 'package:messager/presentation/chat_screen/widgets/attach_file_popup.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/socket_helper.dart';
-import 'package:rxdart/rxdart.dart';
 
 class ChatScreenPresenter {
   final UserScopeData userScope;
   final int roomId;
-  BehaviorSubject<ChatScreenViewModel> _viewModelStream;
+  StreamController<ChatScreenViewModel> _viewModelStream = StreamController();
+  ChatScreenViewModel viewModel;
 
   DateTime lastShowToast;
 
-  BehaviorSubject<List<UploadImage>> uploadImages = BehaviorSubject.seeded([]);
+  StreamController<List<UploadImage>> uploadImagesStream = StreamController();
+  List<UploadImage> uploadImages = [];
+
+  bool screenIsBuilded = false;
 
   ChatScreenPresenter({@required this.userScope, @required this.roomId}) {
+    viewModel = ChatScreenViewModel(chatRoom: _getCurrentRoom());
+    viewModel.messages = viewModel.chatRoom.messages;
+    init();
+  }
+
+  init() async {
     socketInteractor.chatRoomStream.listen((_) {
-      var vm = _viewModelStream.value;
-      vm.chatRoom = _getCurrentRoom();
-      _viewModelStream.add(vm);
+      viewModel.chatRoom = _getCurrentRoom();
+      if (screenIsBuilded) updateView();
     });
     socketInteractor.unsendedMessages.listen((List<ChatMessage> messages) {
-      var vm = _viewModelStream.value;
       List<ChatMessage> unsendedMessages = [];
       if (messages.isNotEmpty)
         messages.forEach((ChatMessage message) {
           if (message.roomId == roomId) unsendedMessages.add(message);
         });
-      vm.unsendedMessages = unsendedMessages.isNotEmpty ? unsendedMessages.reversed.toList() : [];
-      _viewModelStream.add(vm);
+      unsendedMessages = unsendedMessages.isNotEmpty ? unsendedMessages.reversed.toList() : [];
+      if (screenIsBuilded) updateView();
     });
-    _viewModelStream = BehaviorSubject.seeded(ChatScreenViewModel(chatRoom: _getCurrentRoom()));
     TypingDetector(
         textEditingController: messageController,
         onStopTyping: () => sendTypingStatus(false),
@@ -53,13 +60,15 @@ class ChatScreenPresenter {
 
   SocketInteractor get socketInteractor => _socket.socketInteractor;
 
-  ValueStream<ChatScreenViewModel> get viewModelSteam => _viewModelStream.stream;
+  Stream<ChatScreenViewModel> get viewModelSteam => _viewModelStream.stream;
+  List<ChatMessage> unsendedMessages = [];
 
   loadChatHistory() async {
-    var messages = await socketInteractor.getChatHistory(
-        roomId, viewModelSteam.value.chatRoom.messages.last.id);
+    var messages =
+        await socketInteractor.getChatHistory(roomId, viewModel.chatRoom.messages.last.id);
     if (messages != null) {
-      _viewModelStream.add(viewModelSteam.value..chatRoom.messages.addAll(messages));
+      viewModel.chatRoom.messages.addAll(messages);
+      updateView();
     }
   }
 
@@ -90,7 +99,7 @@ class ChatScreenPresenter {
   }
 
   uploadImage(File file) {
-    if (uploadImages.value.length >= 10) {
+    if (uploadImages.length >= 10) {
       if (lastShowToast == null || DateTime.now().difference(lastShowToast).inSeconds > 1) {
         lastShowToast = DateTime.now();
         Fluttertoast.showToast(msg: 'Максимальное кол-во фото 10 шт.');
@@ -104,32 +113,32 @@ class ChatScreenPresenter {
     );
     currentUploadImage.onRetryClick = () {
       currentUploadImage.state = UploadImageState.Uploading;
-      uploadImages.add(uploadImages.value);
+      uploadImagesStream.add(uploadImages);
       Future<String> uploadWork =
           UploadImageRpc(userScope).upload(file, isMessage: 1).catchError((e) {
         currentUploadImage.state = UploadImageState.Error;
-        uploadImages.add(uploadImages.value);
+        uploadImagesStream.add(uploadImages);
       }).then((String value) {
         if (value != null) {
           currentUploadImage.key = value;
           currentUploadImage.state = UploadImageState.Uploaded;
-          uploadImages.add(uploadImages.value);
+          uploadImagesStream.add(uploadImages);
           return value;
         }
         return null;
       });
       currentUploadImage.operation = CancelableOperation<String>.fromFuture(uploadWork);
-      uploadImages.add(uploadImages.value);
+      uploadImagesStream.add(uploadImages);
     };
     Future<String> uploadWork =
         UploadImageRpc(userScope).upload(file, isMessage: 1).catchError((e) {
       currentUploadImage.state = UploadImageState.Error;
-      uploadImages.add(uploadImages.value);
+      uploadImagesStream.add(uploadImages);
     }).then((String value) {
       if (value != null) {
         currentUploadImage.key = value;
         currentUploadImage.state = UploadImageState.Uploaded;
-        uploadImages.add(uploadImages.value);
+        uploadImagesStream.add(uploadImages);
         return value;
       }
       return null;
@@ -137,9 +146,11 @@ class ChatScreenPresenter {
 
     currentUploadImage.operation = CancelableOperation<String>.fromFuture(uploadWork);
     currentUploadImage.onDeleteClick = () {
-      uploadImages.add(uploadImages.value..remove(currentUploadImage));
+      uploadImages.remove(currentUploadImage);
+      uploadImagesStream.add(uploadImages);
     };
-    uploadImages.add(uploadImages.value..add(currentUploadImage));
+    uploadImages.add(currentUploadImage);
+    uploadImagesStream.add(uploadImages);
   }
 
   sendTypingStatus(bool isTyping) {
@@ -148,15 +159,16 @@ class ChatScreenPresenter {
 
   onSendButtonClick() {
     String message = messageController.text.trim();
-    if (message.isEmpty && uploadImages.value.isEmpty) return;
+    if (message.isEmpty && uploadImages.isEmpty) return;
     if (haveUnuploadedPhoto()) return;
     messageController.clear();
     List<String> photos = [];
-    if (uploadImages.value.isNotEmpty) {
-      uploadImages.value.forEach((UploadImage i) {
+    if (uploadImages.isNotEmpty) {
+      uploadImages.forEach((UploadImage i) {
         photos.add(i.key);
       });
-      uploadImages.add(uploadImages.value..clear());
+      uploadImages.clear();
+      uploadImagesStream.add(uploadImages);
     }
 
     socketInteractor.sendMessage(roomId, message, photos);
@@ -164,14 +176,22 @@ class ChatScreenPresenter {
 
   bool haveUnuploadedPhoto() {
     bool have = false;
-    uploadImages.value.forEach((UploadImage i) {
+    uploadImages.forEach((UploadImage i) {
       if (i.state != UploadImageState.Uploaded) have = true;
     });
     return have;
   }
 
-  dispose() {
+  void updateView() async {
+    List<ChatMessage> messages = [];
+    messages.addAll(unsendedMessages);
+    messages.addAll(viewModel.chatRoom.messages);
+    viewModel.messages = messages;
+    _viewModelStream.add(viewModel);
+  }
+
+  void dispose() {
     _viewModelStream?.close();
-    uploadImages?.close();
+    uploadImagesStream?.close();
   }
 }
