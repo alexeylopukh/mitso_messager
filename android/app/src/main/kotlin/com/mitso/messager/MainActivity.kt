@@ -16,32 +16,9 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "Channel.GetNavBatHeight"
-    private  var navBarHeight = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MethodChannel(flutterEngine?.dartExecutor?.binaryMessenger, CHANNEL).setMethodCallHandler {
-            call, result ->
-            if (call.method == "GetNavBatHeight") {
-                val greetings: Int = getNavigationBarHeight()
-                result.success(greetings)
-            }
-        }
-    }
-
-    private fun getNavigationBarHeight() : Int {
-        val navBarPx = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.decorView.rootWindowInsets.systemWindowInsetBottom
-        } else {
-            val resources: Resources = context.resources
-            val resourceId: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-            if (resourceId > 0) {
-                resources.getDimensionPixelSize(resourceId)
-            }else
-            return -1
-        }
-        return convertPixelsToDp(navBarPx.toFloat(), context).toInt()
     }
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -56,8 +33,6 @@ class MainActivity: FlutterActivity() {
             }
         }
 
-        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE)
         if (Build.VERSION.SDK_INT >= 19) {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         }

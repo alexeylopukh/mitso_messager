@@ -3,7 +3,7 @@ import 'package:messager/objects/chat_room.dart';
 
 class ChatScreenViewModel {
   ChatRoom chatRoom;
-  List<ChatMessage> unsendedMessages;
+  List<ChatMessage> messages;
 
-  ChatScreenViewModel({this.chatRoom, this.unsendedMessages = const []});
+  ChatScreenViewModel({this.chatRoom, this.messages});
 }

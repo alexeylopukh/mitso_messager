@@ -6,7 +6,6 @@ import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/main_screen/main_screen.dart';
 
 import 'presentation/auth_screen/auth_screen.dart';
-import 'presentation/helper/get_nav_bar_height.dart';
 
 void main() {
   return runApp(MyApp());
@@ -36,8 +35,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    GetNavBarHeight.getNavBarHeight();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return UserScopeWidget(
       child: CustomTheme(
         child: Builder(
@@ -45,31 +44,31 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
             return StreamBuilder(
                 stream: UserScopeWidget.of(context).init(),
                 builder: (context, snapshot) {
-                  if (snapshot.data == null) return Container();
-                  if (UserScopeWidget.of(context).token == null) {
-                    return createMaterialApp(AuthScreen(), UserScopeWidget.of(context));
-                  }
-                  return createMaterialApp(MainScreen(), UserScopeWidget.of(context));
+                  return MaterialApp(
+                    title: _title,
+                    color: Colors.white,
+                    home: KeyboardSize(
+                      child: snapshot.data == null
+                          ? Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              color: Color(0xffF3F3F3),
+                            )
+                          : UserScopeWidget.of(context).token == null
+                              ? AuthScreen()
+                              : MainScreen(),
+                      userScope: UserScopeWidget.of(context),
+                    ),
+                    theme: ThemeData(
+                        appBarTheme: AppBarTheme(color: Colors.transparent),
+                        fontFamily: 'SFProDisplay',
+                        backgroundColor: Color(0xffF3F3F3),
+                        primaryColor: Color(0xff34ABEB)),
+                  );
                 });
           },
         ),
       ),
-    );
-  }
-
-  static MaterialApp createMaterialApp(Widget home, UserScopeData userScope) {
-    return MaterialApp(
-      title: _title,
-      color: Colors.white,
-      home: KeyboardSize(
-        child: home,
-        userScope: userScope,
-      ),
-      theme: ThemeData(
-          appBarTheme: AppBarTheme(color: Colors.transparent),
-          fontFamily: 'SFProDisplay',
-          backgroundColor: Color(0xffF3F3F3),
-          primaryColor: Color(0xff34ABEB)),
     );
   }
 }

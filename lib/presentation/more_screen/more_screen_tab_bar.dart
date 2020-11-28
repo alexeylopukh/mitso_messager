@@ -64,37 +64,23 @@ class _MoreScreenTabBarState extends State<MoreScreenTabBar> {
       height: MediaQuery.of(context).padding.bottom +
           MediaQuery.of(context).viewInsets.bottom +
           _TAB_HEIGHT,
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 1,
-          offset: Offset(0, -1),
+      decoration: BoxDecoration(
+          color: CustomTheme.of(context).backgroundColor.withOpacity(0.9),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 1,
+              offset: Offset(0, -1),
+            ),
+          ]),
+      child: Padding(
+        padding: EdgeInsets.only(
+            bottom:
+                MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: tabs,
         ),
-      ]),
-      child: Stack(
-        fit: StackFit.loose,
-        children: <Widget>[
-          ClipRRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: Container(
-                height: _TAB_HEIGHT +
-                    MediaQuery.of(context).viewInsets.bottom +
-                    MediaQuery.of(context).padding.bottom,
-                color: CustomTheme.of(context).backgroundColor.withOpacity(0.5),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom +
-                    MediaQuery.of(context).padding.bottom),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: tabs,
-            ),
-          ),
-        ],
       ),
     );
   }

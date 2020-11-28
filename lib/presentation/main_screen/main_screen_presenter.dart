@@ -6,7 +6,6 @@ import 'package:messager/interactor/socket_connector_interactor.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/incoming_uri_helper.dart';
 import 'package:messager/presentation/helper/socket_helper.dart';
-import 'package:uni_links/uni_links.dart';
 
 class MainScreenPresenter {
   final UserScopeData userScope;
@@ -15,14 +14,14 @@ class MainScreenPresenter {
     userScope.socketHelper = SocketHelper(userScope: userScope);
     _socketConnectorInteractor = SocketConnectorInteractor(userScope);
     if (coldStartUriChecked == false) {
-      checkColdStartUniLinksUri();
+      // checkColdStartUniLinksUri();
       coldStartUriChecked = true;
     }
-    incomingUriStreamSubscription = getUriLinksStream().listen((Uri uri) {
-      if (uri != null) processExternalLink(uri);
-    }, onError: (err) {
-      print(err);
-    });
+    // incomingUriStreamSubscription = getUriLinksStream().listen((Uri uri) {
+    //   if (uri != null) processExternalLink(uri);
+    // }, onError: (err) {
+    //   print(err);
+    // });
   }
   IncomingUriHelper _incomingUriHelper = IncomingUriHelper();
 
@@ -47,15 +46,15 @@ class MainScreenPresenter {
     }
   }
 
-  checkColdStartUniLinksUri() async {
-    if (userScope.isColdStart == false) return;
-
-    Uri uri = await getInitialUri();
-    if (uri != null) processExternalLink(uri);
-  }
+  // checkColdStartUniLinksUri() async {
+  //   if (userScope.isColdStart == false) return;
+  //
+  //   Uri uri = await getInitialUri();
+  //   if (uri != null) processExternalLink(uri);
+  // }
 
   dispose() {
-    userScope.socketInteractor.dispose();
-    incomingUriStreamSubscription.cancel();
+    userScope.socketInteractor?.dispose();
+    incomingUriStreamSubscription?.cancel();
   }
 }
