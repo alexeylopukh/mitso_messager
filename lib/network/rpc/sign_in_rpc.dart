@@ -13,7 +13,7 @@ class SignInRpc {
     };
 
     final response = await http
-        .post(API_URL + '/api/auth', body: jsonEncode(body))
+        .post(Uri.parse(API_URL + '/api/auth'), body: jsonEncode(body))
         .timeout(Duration(seconds: 10), onTimeout: () {
       throw SignInRpcException(code: SignInRpcExceptionCode.Timeout);
     }).catchError((e) {

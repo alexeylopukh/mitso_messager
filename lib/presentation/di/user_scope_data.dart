@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:messager/data/store/local/rooms_local_store.dart';
@@ -21,7 +22,7 @@ class UserScopeData {
   RoomsLocalStore roomsLocalStore;
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
-    fcmHelper = FcmHelper();
+
     roomsLocalStore = RoomsLocalStore(this);
   }
 
@@ -36,9 +37,11 @@ class UserScopeData {
   Profile myProfile;
 
   Stream<bool> init() async* {
+    await Firebase.initializeApp();
     await initializeDateFormatting('ru', null);
     token = await authToken();
     myProfile = await getMyProfile();
+    fcmHelper = FcmHelper();
     yield true;
   }
 

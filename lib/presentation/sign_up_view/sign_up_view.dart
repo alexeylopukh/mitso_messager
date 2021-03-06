@@ -26,7 +26,7 @@ class _SignUpViewState extends State<SignUpView> {
       child: StreamBuilder<SignInViewModel>(
           stream: _presenter.viewModelStream,
           builder: (context, snapshot) {
-            SignInViewModel viewModel = _presenter.viewModelStream.value;
+            SignInViewModel viewModel = _presenter.viewModelStream.valueWrapper.value;
             if (viewModel.errorText != null) {
               showErrorDialog(viewModel.errorText);
             }

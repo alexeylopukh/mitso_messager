@@ -6,12 +6,11 @@ import 'package:messager/constants.dart';
 import 'package:messager/objects/profile.dart';
 
 class SignUpRpc {
-  Future<SignUpRpcResponse> signUp(
-      String email, String pass, String name) async {
+  Future<SignUpRpcResponse> signUp(String email, String pass, String name) async {
     var body = {'email': email, 'password': pass, 'name': name};
 
     final response = await http
-        .post(API_URL + '/api/register', body: jsonEncode(body))
+        .post(Uri.parse(API_URL + '/api/register'), body: jsonEncode(body))
         .timeout(Duration(seconds: 10), onTimeout: () {
       throw SignUpRpcException(code: SignUpRpcExceptionCode.Timeout);
     }).catchError((e) {
@@ -39,8 +38,7 @@ class SignUpRpcResponse {
     this.profile,
   });
 
-  factory SignUpRpcResponse.fromJson(Map<String, dynamic> json) =>
-      SignUpRpcResponse(
+  factory SignUpRpcResponse.fromJson(Map<String, dynamic> json) => SignUpRpcResponse(
         token: json["token"],
         profile: Profile.fromJson(json["profile"]),
       );

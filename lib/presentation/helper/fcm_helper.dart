@@ -8,7 +8,7 @@ class FcmHelper {
     init();
   }
 
-  FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   init() async {
     if (Platform.isIOS) await _iosPermission();
@@ -20,14 +20,7 @@ class FcmHelper {
   }
 
   Future _iosPermission() async {
-    Completer completer = Completer();
-    firebaseMessaging.requestNotificationPermissions(
-        IosNotificationSettings(sound: true, badge: true, alert: true));
-    firebaseMessaging.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-      completer.complete();
-      print("Settings registered: $settings");
-    });
-    await completer.future;
+    await firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
     return;
   }
 }

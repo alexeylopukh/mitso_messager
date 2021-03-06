@@ -50,7 +50,7 @@ class _OwnMessageViewState extends State<OwnMessageView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  SelectableLinkify(
+                  Linkify(
                     text: chatMessage.text,
                     style: TextStyle(fontSize: 16, color: Colors.white),
                     linkStyle: TextStyle(fontSize: 16, color: Color(0xff002940)),

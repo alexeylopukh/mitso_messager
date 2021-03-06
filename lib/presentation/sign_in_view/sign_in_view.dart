@@ -21,14 +21,13 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   Widget build(BuildContext context) {
-    if (_presenter == null)
-      _presenter = SignInPresenter(UserScopeWidget.of(context));
+    if (_presenter == null) _presenter = SignInPresenter(UserScopeWidget.of(context));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: StreamBuilder<SignInViewModel>(
           stream: _presenter.viewModelStream,
           builder: (context, snapshot) {
-            var viewModel = _presenter.viewModelStream.value;
+            var viewModel = _presenter.viewModelStream.valueWrapper.value;
             if (viewModel.errorText != null) {
               showErrorDialog(viewModel.errorText);
             }
@@ -80,8 +79,7 @@ class _SignInViewState extends State<SignInView> {
                 CustomButton(
                   child: viewModel.networkOperation
                       ? CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           strokeWidth: 2.0,
                         )
                       : Text(
@@ -89,8 +87,7 @@ class _SignInViewState extends State<SignInView> {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
-                              fontFamily:
-                                  CustomTheme.of(context).boldFontFamily),
+                              fontFamily: CustomTheme.of(context).boldFontFamily),
                         ),
                   height: 50,
                   width: double.infinity,
@@ -116,8 +113,7 @@ class _SignInViewState extends State<SignInView> {
                     children: <Widget>[
                       Text(
                         'Нужен аккаунт?',
-                        style:
-                            TextStyle(color: CustomTheme.of(context).grayColor),
+                        style: TextStyle(color: CustomTheme.of(context).grayColor),
                       ),
                       Container(
                         height: 3,
@@ -137,8 +133,7 @@ class _SignInViewState extends State<SignInView> {
 
   showErrorDialog(String text) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Popups.showModalDialog(context, PopupState.OK,
-          title: 'Ошибка', description: text);
+      Popups.showModalDialog(context, PopupState.OK, title: 'Ошибка', description: text);
     });
   }
 

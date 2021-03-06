@@ -21,7 +21,7 @@ class SocketConnectorInteractor {
   _webSocketAuth() async {
     String token = await userScope.authToken();
     await _waitingConnection();
-    if (userScope.socketHelper.isSocketAuthStream.value == true) return;
+    if (userScope.socketHelper.isSocketAuthStream.valueWrapper.value == true) return;
     bool isAuth = await userScope.socketHelper.auth(token);
     if (isAuth != true) _webSocketAuth();
   }
@@ -29,8 +29,7 @@ class SocketConnectorInteractor {
   Future _waitingConnection() async {
     Completer connectionCompleter = Completer();
     userScope.socketHelper.isSocketConnectionStream.listen((bool isConnected) {
-      if (isConnected == true && !connectionCompleter.isCompleted)
-        connectionCompleter.complete();
+      if (isConnected == true && !connectionCompleter.isCompleted) connectionCompleter.complete();
     });
     await connectionCompleter.future.catchError((e) {});
     return;
@@ -45,9 +44,8 @@ class SocketConnectorInteractor {
     switch (state) {
       case AppLifecycleState.resumed:
         _needToCloseConnection = false;
-        if (disconnectBackgroundCompleter != null)
-          disconnectBackgroundCompleter.complete(true);
-        if (!userScope.socketHelper.isSocketConnectionStream.value)
+        if (disconnectBackgroundCompleter != null) disconnectBackgroundCompleter.complete(true);
+        if (!userScope.socketHelper.isSocketConnectionStream.valueWrapper.value)
           _resumeConnection();
         break;
       case AppLifecycleState.paused:

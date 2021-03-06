@@ -296,16 +296,18 @@ class Popups {
     await showDialog(
         context: context,
         barrierDismissible: false,
-        child: Center(
-          child: Container(
-            width: 40,
-            height: 40,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(CustomTheme.of(context).primaryColor),
-              strokeWidth: 2,
+        builder: (BuildContext context) {
+          return Center(
+            child: Container(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(CustomTheme.of(context).primaryColor),
+                strokeWidth: 2,
+              ),
             ),
-          ),
-        ));
+          );
+        });
     if (!completer.isCompleted) {
       completer.complete();
     }

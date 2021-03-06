@@ -140,6 +140,7 @@ class SocketHelper {
         userScope.socketInteractor.typingUsersStream.add(TypingUser(profile, isTyping, roomId));
     });
     _socket.on('on_news', (data) {
+      if (data == null) return;
       final news = List<NewsModel>.from(data.map((x) => NewsModel.fromJson(x)));
       if (news?.isNotEmpty == true) {
         news.removeWhere((element) {

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:messager/objects/chat_room.dart';
@@ -166,8 +165,8 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
-              Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
-                  'text/plain');
+              // Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+              //     'text/plain');
             },
             child: Container(
               width: double.infinity,

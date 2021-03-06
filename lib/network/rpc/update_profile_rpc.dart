@@ -18,7 +18,7 @@ class UpdateProfileRpc {
     };
 
     final response = await http
-        .post(API_URL + '/api/update_user', body: jsonEncode(body))
+        .post(Uri.parse(API_URL + '/api/update_user'), body: jsonEncode(body))
         .timeout(Duration(seconds: 10), onTimeout: () {
       throw SignInRpcException(code: SignInRpcExceptionCode.Timeout);
     }).catchError((e) {

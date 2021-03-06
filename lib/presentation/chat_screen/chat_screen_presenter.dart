@@ -73,7 +73,7 @@ class ChatScreenPresenter {
   }
 
   ChatRoom _getCurrentRoom() {
-    List<ChatRoom> chatRooms = socketInteractor.chatRoomStream.value;
+    List<ChatRoom> chatRooms = socketInteractor.chatRoomStream.valueWrapper.value;
     var roomsIterator = chatRooms.iterator;
     ChatRoom foundedRoom;
     while (roomsIterator.moveNext()) {

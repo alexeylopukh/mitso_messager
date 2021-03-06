@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:messager/presentation/chat_rooms_view/chat_rooms_view.dart';
 import 'package:messager/presentation/components/animated_index_stack.dart';
@@ -62,15 +63,14 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     UserScopeWidget.of(context).messagesStream.listen((String message) {
       Popups.showModalDialog(context, PopupState.OK, description: message);
     });
-    _presenter.userScope.fcmHelper.firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {},
-      onResume: (Map<String, dynamic> message) {
-        return IncomingPushHelper().handlePush(message, _presenter.userScope);
-      },
-      onLaunch: (Map<String, dynamic> message) {
-        return IncomingPushHelper().handlePush(message, _presenter.userScope);
-      },
-    );
+    // FirebaseMessaging.onMessage.listen((event) {
+    //   // print('onMessage');
+    //   // return IncomingPushHelper().handlePush(event.data, _presenter.userScope);
+    // });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print('onMessageOpenedApp');
+      return IncomingPushHelper().handlePush(event.data, _presenter.userScope);
+    });
   }
 
   onTabClick(int index) {

@@ -39,7 +39,7 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
           StreamBuilder<ChatRoomsViewModel>(
               stream: _presenter.viewModelStream,
               builder: (context, snapshot) {
-                ChatRoomsViewModel viewModel = _presenter.viewModelStream.value;
+                ChatRoomsViewModel viewModel = _presenter.viewModelStream.valueWrapper.value;
                 if (viewModel.rooms == null) {
                   return Center(
                     child: CircularProgressIndicator(
@@ -103,6 +103,7 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
                           bool isConnected = UserScopeWidget.of(context)
                               .socketHelper
                               .isSocketConnectionStream
+                              .valueWrapper
                               .value;
                           return Text(
                             isConnected ? 'Мои чаты' : 'Подключение...',
