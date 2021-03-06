@@ -22,7 +22,6 @@ class UserScopeData {
   RoomsLocalStore roomsLocalStore;
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
-
     roomsLocalStore = RoomsLocalStore(this);
   }
 
@@ -84,6 +83,31 @@ class UserScopeData {
       await prefs.setString('profile', jsonEncode(profile.toJson()));
     else
       await prefs.remove('profile');
+  }
+
+  Future addKeys(Map<int, String> input) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, String> dataForSave = {};
+    Map<int, String> keys = await getKeys();
+    keys.addAll(input);
+    keys.forEach((key, value) {
+      dataForSave[key.toString()] = value;
+    });
+    prefs.setString('keys', jsonEncode(dataForSave));
+  }
+
+  Future<Map<int, String>> getKeys() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var json = prefs.getString('keys');
+    if (json == null || json.isEmpty) {
+      return Map<int, String>.of({});
+    }
+    Map<String, dynamic> enicoded = jsonDecode(json);
+    Map<int, String> result = {};
+    enicoded.forEach((key, value) {
+      result[int.parse(key)] = value;
+    });
+    return result;
   }
 
   dispose() {

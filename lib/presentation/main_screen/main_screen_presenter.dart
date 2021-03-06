@@ -22,6 +22,7 @@ class MainScreenPresenter {
     // }, onError: (err) {
     //   print(err);
     // });
+    test();
   }
   IncomingUriHelper _incomingUriHelper = IncomingUriHelper();
 
@@ -33,7 +34,14 @@ class MainScreenPresenter {
     _socketConnectorInteractor.onChangeAppLifeCircle(state);
   }
 
-  processExternalLink(Uri uri) {
+  void test() async {
+    await userScope.addKeys(Map<int, String>.from({-1: 'yesy'}));
+    print(await userScope.getKeys());
+    await userScope.addKeys(Map<int, String>.from({-2: 'ysdfsgfdsfgesy'}));
+    print(await userScope.getKeys());
+  }
+
+  void processExternalLink(Uri uri) {
     IncomingUriHelperData data = _incomingUriHelper.incomingUriHandler(uri);
     if (data == null) return;
     switch (data.type) {
