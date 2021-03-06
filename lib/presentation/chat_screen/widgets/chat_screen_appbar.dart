@@ -7,6 +7,7 @@ import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/ini_links_generator.dart';
 import 'package:messager/presentation/qr_code_view/qr_code_view.dart';
+import 'package:share/share.dart';
 
 class ChatScreenAppBar extends StatefulWidget {
   final ChatRoom chatRoom;
@@ -165,6 +166,8 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
+              Share.share(UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+                  subject: chatRoom.name);
               // Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
               //     'text/plain');
             },
