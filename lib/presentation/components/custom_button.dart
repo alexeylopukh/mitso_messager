@@ -21,19 +21,21 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomElevation(
       height: height,
-      child: FlatButton(
+      child: Material(
         color: CustomTheme.of(context).primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: new BorderRadius.circular(8.0),
         ),
-        child: Container(
-          height: height,
-          width: width,
-          child: Center(
-            child: child,
+        child: InkWell(
+          child: Container(
+            height: height,
+            width: width,
+            child: Center(
+              child: child,
+            ),
           ),
+          onTap: onTap,
         ),
-        onPressed: onTap,
       ),
     );
   }

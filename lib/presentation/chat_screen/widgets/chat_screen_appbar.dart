@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:messager/objects/chat_room.dart';
+import 'package:messager/presentation/add_user_to_chat_view/add_user_to_chat_view.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/ini_links_generator.dart';
@@ -26,7 +27,7 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
   @override
   Widget build(BuildContext context) {
     double navBarHeight = MediaQuery.of(context).padding.top + 55;
-    double navBarWithMenu = navBarHeight + 130;
+    double navBarWithMenu = navBarHeight + 180;
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       curve: Curves.ease,
@@ -188,6 +189,40 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
                         ),
                       )),
                   Text('Поделиться ссылкой', style: TextStyle(fontSize: 20)),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () async {
+              showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return AddUserToChatView();
+                  });
+            },
+            child: Container(
+              width: double.infinity,
+              height: 50,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                      width: 50,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.add,
+                          size: 27,
+                        ),
+                      )),
+                  Text('Добавить в чат', style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),

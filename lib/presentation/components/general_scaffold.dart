@@ -22,9 +22,9 @@ class GeneralScaffold extends StatelessWidget {
         }
         SystemChannels.textInput.invokeMethod('TextInput.hide');
       },
-      child: Material(
-        color: backgroundColor ?? CustomTheme.of(context).backgroundColor,
-        child: Padding(
+      child: Scaffold(
+        backgroundColor: backgroundColor ?? CustomTheme.of(context).backgroundColor,
+        body: Padding(
           padding: EdgeInsets.only(
               bottom: addNavBarPadding ? MediaQuery.of(context).viewInsets.bottom : 0),
           child: child,
