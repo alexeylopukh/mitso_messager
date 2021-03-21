@@ -198,7 +198,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         })),
                 ChatScreenAppBar(
                   chatRoom: viewModel.chatRoom,
-                  chatScreenViewModel: viewModel,
+                  chatScreenPresenter: _presenter,
                 ),
               ],
             );

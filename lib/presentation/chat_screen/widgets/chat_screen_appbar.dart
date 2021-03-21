@@ -3,9 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:messager/objects/chat_room.dart';
+import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/add_user_to_chat_view/add_user_to_chat_view.dart';
 import 'package:messager/presentation/add_user_to_chat_view/user_item_view.dart';
-import 'package:messager/presentation/chat_screen/chat_screen_view_model.dart';
+import 'package:messager/presentation/chat_screen/chat_screen_presenter.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/ini_links_generator.dart';
@@ -14,9 +15,9 @@ import 'package:share/share.dart';
 
 class ChatScreenAppBar extends StatefulWidget {
   final ChatRoom chatRoom;
-  final ChatScreenViewModel chatScreenViewModel;
+  final ChatScreenPresenter chatScreenPresenter;
 
-  const ChatScreenAppBar({Key key, @required this.chatRoom, @required this.chatScreenViewModel})
+  const ChatScreenAppBar({Key key, @required this.chatRoom, @required this.chatScreenPresenter})
       : super(key: key);
 
   @override
@@ -208,7 +209,10 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
                     builder: (context) {
-                      return AddUserToChatView();
+                      return AddUserToChatView(
+                        usersInChat: widget.chatScreenPresenter.viewModel.users,
+                        chatScreenPresenter: widget.chatScreenPresenter,
+                      );
                     });
               },
               child: Container(
@@ -233,14 +237,15 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
               ),
             ),
           ),
-          if (widget.chatScreenViewModel.users != null)
+          if (widget.chatScreenPresenter.viewModel.users != null)
             Expanded(
                 child: ListView.builder(
-                    itemCount: widget.chatScreenViewModel.users.length,
+                    itemCount: widget.chatScreenPresenter.viewModel.users.length,
                     itemBuilder: (c, i) {
                       return UserItemView(
-                        profile: widget.chatScreenViewModel.users[i],
+                        profile: widget.chatScreenPresenter.viewModel.users[i],
                         showAddButton: false,
+                        onAddClick: (Profile profile) {},
                       );
                     })),
         ],

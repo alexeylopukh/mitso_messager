@@ -7,8 +7,10 @@ import 'package:messager/presentation/di/custom_theme.dart';
 class UserItemView extends StatelessWidget {
   final Profile profile;
   final bool showAddButton;
+  final Function(Profile profile) onAddClick;
 
-  const UserItemView({Key key, @required this.profile, @required this.showAddButton})
+  const UserItemView(
+      {Key key, @required this.profile, @required this.showAddButton, @required this.onAddClick})
       : super(key: key);
 
   @override
@@ -60,7 +62,9 @@ class UserItemView extends StatelessWidget {
                   color: Colors.white,
                   size: 30,
                 ),
-                onTap: () async {},
+                onTap: () {
+                  onAddClick(profile);
+                },
               ),
             )
         ],

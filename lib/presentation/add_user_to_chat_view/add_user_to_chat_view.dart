@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:messager/network/rpc/find_users_rpc.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/add_user_to_chat_view/user_item_view.dart';
+import 'package:messager/presentation/chat_screen/chat_screen_presenter.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 
 class AddUserToChatView extends StatefulWidget {
+  final List<Profile> usersInChat;
+  final ChatScreenPresenter chatScreenPresenter;
+
+  const AddUserToChatView({Key key, @required this.usersInChat, @required this.chatScreenPresenter})
+      : super(key: key);
+
   @override
   _AddUserToChatViewState createState() => _AddUserToChatViewState();
 }
@@ -72,13 +79,32 @@ class _AddUserToChatViewState extends State<AddUserToChatView> {
                       itemBuilder: (c, i) {
                         return UserItemView(
                           profile: users[i],
-                          showAddButton: true,
+                          showAddButton: !haveInChat(users[i]),
+                          onAddClick: (Profile profile) {
+                            widget.chatScreenPresenter.viewModel.users.insert(0, profile);
+                            widget.chatScreenPresenter.updateView();
+                            UserScopeWidget.of(context).socketHelper.sendData('add_user_to_chat', {
+                              "users": [profile.id],
+                              "room_id": widget.chatScreenPresenter.roomId,
+                            });
+                            updateView();
+                          },
                         );
                       }))
           ],
         ),
       ),
     );
+  }
+
+  bool haveInChat(Profile profile) {
+    if (widget.usersInChat == null || widget.usersInChat.isEmpty) return false;
+    try {
+      final found = widget.usersInChat.firstWhere((element) => element.id == profile.id);
+      return found != null;
+    } catch (e) {
+      return false;
+    }
   }
 
   void updateView() {
