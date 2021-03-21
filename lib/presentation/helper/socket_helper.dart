@@ -106,6 +106,13 @@ class SocketHelper {
       socketInteractor.handleNewMessage(message);
       print(value);
     });
+    _socket.on('events', (value) async {
+      if (value is String) {
+        if (value == "rooms_update") {
+          sendData('on_rooms', {});
+        }
+      }
+    });
     _socket.on('on_rooms', (value) async {
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       await EncryptInteractor(userScope).decryptRooms(rooms);
