@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:messager/data/store/local/unsent_messages_store.dart';
+import 'package:messager/interactor/encrypt_interactor.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
 import 'package:messager/objects/news_model.dart';
@@ -51,10 +52,11 @@ class SocketInteractor {
     socket.sendData('on_create_news', {"title": title, "text": text, "uuid": Uuid().v4()});
   }
 
-  sendMessage(int roomId, String message, List<String> photos) {
+  sendMessage(int roomId, String message, List<String> photos) async {
     var chatMessage = ChatMessage(
         roomId: roomId,
-        text: message,
+        encryptedMessage: message,
+        cryptedMessage: await EncryptInteractor(userScope).cryptMessage(roomId, message),
         uuid: Uuid().v4(),
         sender: userScope.myProfile,
         date: DateTime.now(),
@@ -69,7 +71,6 @@ class SocketInteractor {
   }
 
   Future<List<ChatMessage>> getChatHistory(int roomId, int messageId) async {
-    print('get');
     socket.getChatMessagesCompleter = Completer();
     socket.sendData(
         'get_chat_message', {"room_id": roomId, "limit": 50, "last_message_id": messageId});
@@ -83,7 +84,7 @@ class SocketInteractor {
     socket.sendData('on_chat_message', {
       "room_id": chatMessage.roomId,
       "uuid": chatMessage.uuid,
-      "text": chatMessage.text,
+      "text": chatMessage.cryptedMessage,
       "photos": chatMessage.photos
     });
   }
@@ -138,7 +139,7 @@ class SocketInteractor {
       _sendMessageWithSocket(ChatMessage(
         roomId: message.roomId,
         uuid: Uuid().v1(),
-        text: DateTime.now().microsecondsSinceEpoch.toString(),
+        cryptedMessage: DateTime.now().microsecondsSinceEpoch.toString(),
         photos: [],
       ));
     }

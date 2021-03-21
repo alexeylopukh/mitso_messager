@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:messager/constants.dart';
+import 'package:messager/interactor/encrypt_interactor.dart';
 import 'package:messager/interactor/socket_interactor.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
@@ -99,13 +100,15 @@ class SocketHelper {
       _setStatusConnection(false);
       print("DISCONNECT");
     });
-    _socket.on('on_chat_message', (value) {
+    _socket.on('on_chat_message', (value) async {
       var message = ChatMessage.fromJson(value);
+      await EncryptInteractor(userScope).decryptMessage(message);
       socketInteractor.handleNewMessage(message);
       print(value);
     });
-    _socket.on('on_rooms', (value) {
+    _socket.on('on_rooms', (value) async {
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
+      await EncryptInteractor(userScope).decryptRooms(rooms);
       socketInteractor.appendChatRooms(rooms);
       if (chatHistoryCompleter != null && !chatHistoryCompleter.isCompleted) {
         chatHistoryCompleter.complete(true);

@@ -57,10 +57,8 @@ class _ChatRoomItemViewState extends State<ChatRoomItemView> {
                           Text(
                             chatRoom.name,
                             style: TextStyle(
-                                color:
-                                    CustomTheme.of(context).textBlackGrayColor,
-                                fontFamily:
-                                    CustomTheme.of(context).boldFontFamily,
+                                color: CustomTheme.of(context).textBlackGrayColor,
+                                fontFamily: CustomTheme.of(context).boldFontFamily,
                                 fontSize: 18),
                           ),
                           if (chatRoom.messages.isNotEmpty)
@@ -70,22 +68,16 @@ class _ChatRoomItemViewState extends State<ChatRoomItemView> {
                               overflow: TextOverflow.ellipsis,
                               text: TextSpan(children: [
                                 TextSpan(
-                                  text: chatRoom.messages.first.sender.name
-                                          .split(' ')
-                                          .first +
-                                      ": ",
+                                  text: chatRoom.messages.first.sender.name.split(' ').first + ": ",
                                   style: TextStyle(
-                                      color: CustomTheme.of(context)
-                                          .textBlackGrayColor,
+                                      color: CustomTheme.of(context).textBlackGrayColor,
                                       fontSize: 16,
-                                      fontFamily: CustomTheme.of(context)
-                                          .boldFontFamily),
+                                      fontFamily: CustomTheme.of(context).boldFontFamily),
                                 ),
                                 TextSpan(
-                                  text: chatRoom.messages.first.text,
+                                  text: chatRoom.messages.first.cryptedMessage,
                                   style: TextStyle(
-                                      color: CustomTheme.of(context)
-                                          .textBlackGrayColor,
+                                      color: CustomTheme.of(context).textBlackGrayColor,
                                       fontSize: 16),
                                 )
                               ]),
@@ -103,9 +95,7 @@ class _ChatRoomItemViewState extends State<ChatRoomItemView> {
                         children: <Widget>[
                           Text(composeAgoTime(chatRoom.messages.first.date),
                               style: TextStyle(
-                                  color: CustomTheme.of(context)
-                                      .textBlackGrayColor,
-                                  fontSize: 12))
+                                  color: CustomTheme.of(context).textBlackGrayColor, fontSize: 12))
                         ],
                       )
                   ],

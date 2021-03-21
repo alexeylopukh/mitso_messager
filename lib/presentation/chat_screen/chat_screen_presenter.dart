@@ -45,7 +45,7 @@ class ChatScreenPresenter {
         messages.forEach((ChatMessage message) {
           if (message.roomId == roomId) unsendedMessages.add(message);
         });
-      unsendedMessages = unsendedMessages.isNotEmpty ? unsendedMessages.reversed.toList() : [];
+      this.unsendedMessages = unsendedMessages.isNotEmpty ? unsendedMessages.reversed.toList() : [];
       if (screenIsBuilded) updateView();
     });
     TypingDetector(
@@ -157,7 +157,7 @@ class ChatScreenPresenter {
     socketInteractor.sendTypingStatus(isTyping, roomId);
   }
 
-  onSendButtonClick() {
+  onSendButtonClick() async {
     String message = messageController.text.trim();
     if (message.isEmpty && uploadImages.isEmpty) return;
     if (haveUnuploadedPhoto()) return;

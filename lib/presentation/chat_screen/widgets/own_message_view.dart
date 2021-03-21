@@ -56,7 +56,7 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Linkify(
-                      text: chatMessage.text,
+                      text: chatMessage?.encryptedMessage ?? "",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                       linkStyle: TextStyle(fontSize: 16, color: Color(0xff002940)),
                       onOpen: (link) {

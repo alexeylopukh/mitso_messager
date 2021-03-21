@@ -5,7 +5,8 @@ class ChatMessage {
   int userId;
   int roomId;
   String uuid;
-  String text;
+  String cryptedMessage;
+  String encryptedMessage;
   DateTime date;
   Profile sender;
   List<String> photos;
@@ -16,7 +17,8 @@ class ChatMessage {
       this.userId,
       this.roomId,
       this.uuid,
-      this.text,
+      this.cryptedMessage,
+      this.encryptedMessage,
       this.date,
       this.sender,
       this.isSended = true,
@@ -27,7 +29,8 @@ class ChatMessage {
       userId: json["user_id"],
       roomId: json["room_id"],
       uuid: json["uuid"],
-      text: json["text"],
+      encryptedMessage: json["encryptedMessage"],
+      cryptedMessage: json["text"],
       date: DateTime.fromMillisecondsSinceEpoch(json["date"] * 1000),
       photos: json['photos'] == null ? [] : json['photos'].cast<String>(),
       sender:
@@ -39,7 +42,8 @@ class ChatMessage {
         "user_id": userId,
         "room_id": roomId,
         "uuid": uuid,
-        "text": text,
+        "encryptedMessage": encryptedMessage,
+        "text": cryptedMessage,
         "date": date.millisecondsSinceEpoch ~/ 1000,
         "user": sender.toJson(),
         "is_sended": isSended,

@@ -66,9 +66,9 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
                   height: 5,
                   width: 0,
                 ),
-                if (chatMessage.text.isNotEmpty)
+                if (chatMessage.encryptedMessage.isNotEmpty)
                   Linkify(
-                      text: chatMessage.text,
+                      text: chatMessage.encryptedMessage,
                       style: TextStyle(fontSize: 16),
                       linkStyle: TextStyle(fontSize: 16, color: Color(0xff5AC8FA)),
                       onOpen: (link) {
