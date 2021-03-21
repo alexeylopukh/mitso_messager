@@ -20,6 +20,7 @@ class UserScopeData {
   SocketHelper socketHelper;
   SocketInteractor get socketInteractor => socketHelper.socketInteractor;
   RoomsLocalStore roomsLocalStore;
+  SharedPreferences _prefs;
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
     roomsLocalStore = RoomsLocalStore(this);
@@ -38,8 +39,9 @@ class UserScopeData {
   Stream<bool> init() async* {
     await Firebase.initializeApp();
     await initializeDateFormatting('ru', null);
-    token = await authToken();
-    myProfile = await getMyProfile();
+    _prefs = await SharedPreferences.getInstance();
+    token = authToken();
+    myProfile = getMyProfile();
     fcmHelper = FcmHelper();
     yield true;
   }
@@ -49,28 +51,25 @@ class UserScopeData {
     setAuthToken(null);
   }
 
-  Future<String> fcmToken() async {
+  Future<String> fcmToken() {
     return fcmHelper.getFcmToken();
   }
 
-  Future<String> authToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('authToken');
+  String authToken() {
+    String token = _prefs.getString('authToken');
     return token;
   }
 
   Future setAuthToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (token != null)
-      await prefs.setString('authToken', token);
+      await _prefs.setString('authToken', token);
     else
-      await prefs.remove('authToken');
+      await _prefs.remove('authToken');
     state.rebuild();
   }
 
-  Future<Profile> getMyProfile() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = prefs.getString('profile');
+  Profile getMyProfile() {
+    String json = _prefs.getString('profile');
     if (json != null) {
       return Profile.fromJson(jsonDecode(json));
     }
@@ -78,36 +77,10 @@ class UserScopeData {
   }
 
   Future setMyProfile(Profile profile) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (profile != null)
-      await prefs.setString('profile', jsonEncode(profile.toJson()));
+      await _prefs.setString('profile', jsonEncode(profile.toJson()));
     else
-      await prefs.remove('profile');
-  }
-
-  Future addKeys(Map<int, String> input) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, String> dataForSave = {};
-    Map<int, String> keys = await getKeys();
-    keys.addAll(input);
-    keys.forEach((key, value) {
-      dataForSave[key.toString()] = value;
-    });
-    prefs.setString('keys', jsonEncode(dataForSave));
-  }
-
-  Future<Map<int, String>> getKeys() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var json = prefs.getString('keys');
-    if (json == null || json.isEmpty) {
-      return Map<int, String>.of({});
-    }
-    Map<String, dynamic> enicoded = jsonDecode(json);
-    Map<int, String> result = {};
-    enicoded.forEach((key, value) {
-      result[int.parse(key)] = value;
-    });
-    return result;
+      await _prefs.remove('profile');
   }
 
   dispose() {

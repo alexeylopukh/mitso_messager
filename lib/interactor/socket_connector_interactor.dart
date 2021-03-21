@@ -19,7 +19,7 @@ class SocketConnectorInteractor {
   Completer<bool> disconnectBackgroundCompleter;
 
   _webSocketAuth() async {
-    String token = await userScope.authToken();
+    String token = userScope.authToken();
     await _waitingConnection();
     if (userScope.socketHelper.isSocketAuthStream.valueWrapper.value == true) return;
     bool isAuth = await userScope.socketHelper.auth(token);

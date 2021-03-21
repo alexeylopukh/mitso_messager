@@ -38,7 +38,7 @@ class UploadImageRpc {
             }));
 
     final request = http.MultipartRequest("POST", uri);
-    request.fields['token'] = await userScope.authToken();
+    request.fields['token'] = userScope.authToken();
     if (isMessage != null) request.fields['is_message'] = "1";
     if (roomId != null) request.fields['room_id'] = roomId;
     final multipartFile = http.MultipartFile('file_name', uploadProgressStream, length,

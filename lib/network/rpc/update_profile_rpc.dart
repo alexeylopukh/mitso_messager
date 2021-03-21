@@ -14,7 +14,7 @@ class UpdateProfileRpc {
   Future<bool> update({String imageKey}) async {
     var body = {
       'image_key': imageKey,
-      'token': await userScope.authToken(),
+      'token': userScope.authToken(),
     };
 
     final response = await http

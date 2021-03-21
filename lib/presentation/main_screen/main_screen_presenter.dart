@@ -17,12 +17,6 @@ class MainScreenPresenter {
       // checkColdStartUniLinksUri();
       coldStartUriChecked = true;
     }
-    // incomingUriStreamSubscription = getUriLinksStream().listen((Uri uri) {
-    //   if (uri != null) processExternalLink(uri);
-    // }, onError: (err) {
-    //   print(err);
-    // });
-    test();
   }
   IncomingUriHelper _incomingUriHelper = IncomingUriHelper();
 
@@ -32,13 +26,6 @@ class MainScreenPresenter {
 
   onChangeAppLifeCircle(AppLifecycleState state) {
     _socketConnectorInteractor.onChangeAppLifeCircle(state);
-  }
-
-  void test() async {
-    await userScope.addKeys(Map<int, String>.from({-1: 'yesy'}));
-    print(await userScope.getKeys());
-    await userScope.addKeys(Map<int, String>.from({-2: 'ysdfsgfdsfgesy'}));
-    print(await userScope.getKeys());
   }
 
   void processExternalLink(Uri uri) {
