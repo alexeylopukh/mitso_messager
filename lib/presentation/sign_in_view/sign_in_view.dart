@@ -34,17 +34,21 @@ class _SignInViewState extends State<SignInView> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  height: 40,
+                AnimatedContainer(
+                  height: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 40,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
                 ),
-                Text(
-                  'Вход',
-                  style: TextStyle(
-                      fontSize: 28,
-                      color: CustomTheme.of(context).textBlackColor,
-                      fontFamily: CustomTheme.of(context).boldFontFamily),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 25),
+                  child: Text(
+                    'Вход',
+                    style: TextStyle(
+                        fontSize: 28,
+                        color: CustomTheme.of(context).textBlackColor,
+                        fontFamily: CustomTheme.of(context).boldFontFamily),
+                  ),
                 ),
-                Spacer(),
                 TextFormField(
                   controller: _presenter.emailController,
                   decoration: InputDecoration(

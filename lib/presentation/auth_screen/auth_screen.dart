@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:messager/presentation/components/custom_elevation.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/sign_in_view/sign_in_view.dart';
@@ -48,13 +47,12 @@ class _AuthScreenState extends State<AuthScreen> {
                 Container(
                     height: MediaQuery.of(context).systemGestureInsets.top +
                         MediaQuery.of(context).padding.top),
-                CustomElevation(
-                  height: 120,
-                  child: SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: SvgPicture.asset('assets/images/app_icon.svg')),
-                ),
+                AnimatedContainer(
+                    width: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 120,
+                    height: MediaQuery.of(context).viewInsets.bottom > 0 ? 0 : 120,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.ease,
+                    child: SvgPicture.asset('assets/images/app_icon.svg')),
                 Expanded(
                   child: PageView(
                     controller: _pageController,

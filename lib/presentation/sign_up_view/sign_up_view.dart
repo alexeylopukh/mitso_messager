@@ -33,18 +33,20 @@ class _SignUpViewState extends State<SignUpView> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Spacer(),
-                TextFormField(
-                  controller: _presenter.emailController,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: TextFormField(
+                    controller: _presenter.emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
+                      ),
                     ),
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                  keyboardType: TextInputType.emailAddress,
                 ),
                 Container(
                   height: 20,
