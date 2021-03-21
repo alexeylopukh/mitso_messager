@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:messager/interactor/socket_interactor.dart';
 import 'package:messager/interactor/typing_detector.dart';
+import 'package:messager/network/rpc/get_room_member_rpc.dart';
 import 'package:messager/network/rpc/upload_image.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/objects/chat_room.dart';
@@ -52,6 +53,7 @@ class ChatScreenPresenter {
         textEditingController: messageController,
         onStopTyping: () => sendTypingStatus(false),
         onStartTyping: () => sendTypingStatus(true));
+    loadChatMembers();
   }
 
   TextEditingController messageController = TextEditingController();
@@ -70,6 +72,11 @@ class ChatScreenPresenter {
       viewModel.chatRoom.messages.addAll(messages);
       updateView();
     }
+  }
+
+  void loadChatMembers() async {
+    viewModel.users = await GetRoomMembersRpc(userScope).getMembers(roomId);
+    updateView();
   }
 
   ChatRoom _getCurrentRoom() {

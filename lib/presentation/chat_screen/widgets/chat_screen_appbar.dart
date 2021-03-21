@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:messager/objects/chat_room.dart';
 import 'package:messager/presentation/add_user_to_chat_view/add_user_to_chat_view.dart';
+import 'package:messager/presentation/add_user_to_chat_view/user_item_view.dart';
+import 'package:messager/presentation/chat_screen/chat_screen_view_model.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/ini_links_generator.dart';
@@ -12,8 +14,10 @@ import 'package:share/share.dart';
 
 class ChatScreenAppBar extends StatefulWidget {
   final ChatRoom chatRoom;
+  final ChatScreenViewModel chatScreenViewModel;
 
-  const ChatScreenAppBar({Key key, @required this.chatRoom}) : super(key: key);
+  const ChatScreenAppBar({Key key, @required this.chatRoom, @required this.chatScreenViewModel})
+      : super(key: key);
 
   @override
   _ChatScreenAppBarState createState() => _ChatScreenAppBarState();
@@ -27,7 +31,7 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
   @override
   Widget build(BuildContext context) {
     double navBarHeight = MediaQuery.of(context).padding.top + 55;
-    double navBarWithMenu = navBarHeight + 180;
+    double navBarWithMenu = MediaQuery.of(context).size.height;
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       curve: Curves.ease,
@@ -123,112 +127,124 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
   }
 
   Widget navBarMenu() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        if (chatRoom.id != 1)
-          Padding(
-            padding: const EdgeInsets.only(left: 50, right: 50, top: 5),
-            child: Text('id комнаты: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
-          ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () async {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => QrCodeView(
-                        textForGenerate: UniLinksGenerator().generateJoinChatLink(chatRoom.id),
-                      )));
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      width: 50,
-                      height: 50,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                            height: 34,
-                            width: 34,
-                            child: SvgPicture.asset('assets/icons/ic_qr.svg')),
-                      )),
-                  Text('Поделиться QR кодом', style: TextStyle(fontSize: 20)),
-                ],
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (chatRoom.id != 1)
+            Padding(
+              padding: const EdgeInsets.only(left: 50, right: 50, top: 5),
+              child: Text('id комнаты: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
+            ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => QrCodeView(
+                          textForGenerate: UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+                        )));
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                        width: 50,
+                        height: 50,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                              height: 34,
+                              width: 34,
+                              child: SvgPicture.asset('assets/icons/ic_qr.svg')),
+                        )),
+                    Text('Поделиться QR кодом', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () async {
-              Share.share(UniLinksGenerator().generateJoinChatLink(chatRoom.id),
-                  subject: chatRoom.name);
-              // Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
-              //     'text/plain');
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      width: 50,
-                      height: 50,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.share,
-                          size: 27,
-                        ),
-                      )),
-                  Text('Поделиться ссылкой', style: TextStyle(fontSize: 20)),
-                ],
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                Share.share(UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+                    subject: chatRoom.name);
+                // Share.text(chatRoom.name, UniLinksGenerator().generateJoinChatLink(chatRoom.id),
+                //     'text/plain');
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                        width: 50,
+                        height: 50,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.share,
+                            size: 27,
+                          ),
+                        )),
+                    Text('Поделиться ссылкой', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () async {
-              showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  builder: (context) {
-                    return AddUserToChatView();
-                  });
-            },
-            child: Container(
-              width: double.infinity,
-              height: 50,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      width: 50,
-                      height: 50,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.add,
-                          size: 27,
-                        ),
-                      )),
-                  Text('Добавить в чат', style: TextStyle(fontSize: 20)),
-                ],
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return AddUserToChatView();
+                    });
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                        width: 50,
+                        height: 50,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.add,
+                            size: 27,
+                          ),
+                        )),
+                    Text('Добавить в чат', style: TextStyle(fontSize: 20)),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+          if (widget.chatScreenViewModel.users != null)
+            Expanded(
+                child: ListView.builder(
+                    itemCount: widget.chatScreenViewModel.users.length,
+                    itemBuilder: (c, i) {
+                      return UserItemView(
+                        profile: widget.chatScreenViewModel.users[i],
+                        showAddButton: false,
+                      );
+                    })),
+        ],
+      ),
     );
   }
 

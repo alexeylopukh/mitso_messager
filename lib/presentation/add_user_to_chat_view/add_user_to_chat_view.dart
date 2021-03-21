@@ -72,6 +72,7 @@ class _AddUserToChatViewState extends State<AddUserToChatView> {
                       itemBuilder: (c, i) {
                         return UserItemView(
                           profile: users[i],
+                          showAddButton: true,
                         );
                       }))
           ],

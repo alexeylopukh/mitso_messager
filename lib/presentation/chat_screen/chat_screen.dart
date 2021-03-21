@@ -196,7 +196,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           );
                         })),
-                ChatScreenAppBar(chatRoom: viewModel.chatRoom),
+                ChatScreenAppBar(
+                  chatRoom: viewModel.chatRoom,
+                  chatScreenViewModel: viewModel,
+                ),
               ],
             );
           }),
