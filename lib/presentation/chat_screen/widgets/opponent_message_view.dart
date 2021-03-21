@@ -6,6 +6,7 @@ import 'package:messager/objects/chat_message.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/open_url_helper.dart';
+import 'package:messager/presentation/profile_view_screen/profile_view_screen.dart';
 
 import 'chat_screen_attached_images.dart';
 
@@ -26,10 +27,19 @@ class _OpponentMessageViewState extends State<OpponentMessageView> {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: 10, bottom: 5),
-          child: AvatarView(
-            avatarKey: chatMessage.sender.avatarUrl,
-            name: chatMessage.sender.name,
-            size: 45.0,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return ProfileViewScreen(
+                  profile: chatMessage.sender,
+                );
+              }));
+            },
+            child: AvatarView(
+              avatarKey: chatMessage.sender.avatarUrl,
+              name: chatMessage.sender.name,
+              size: 45.0,
+            ),
           ),
         ),
         Flexible(
