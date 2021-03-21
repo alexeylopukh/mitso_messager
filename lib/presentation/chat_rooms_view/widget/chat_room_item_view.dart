@@ -75,7 +75,7 @@ class _ChatRoomItemViewState extends State<ChatRoomItemView> {
                                       fontFamily: CustomTheme.of(context).boldFontFamily),
                                 ),
                                 TextSpan(
-                                  text: chatRoom.messages.first.cryptedMessage,
+                                  text: chatRoom.messages.first.encryptedMessage,
                                   style: TextStyle(
                                       color: CustomTheme.of(context).textBlackGrayColor,
                                       fontSize: 16),

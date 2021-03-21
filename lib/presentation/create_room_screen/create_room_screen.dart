@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:messager/constants.dart';
+import 'package:messager/interactor/encrypt_interactor.dart';
 import 'package:messager/network/rpc/upload_image.dart';
 import 'package:messager/presentation/components/custom_button.dart';
 import 'package:messager/presentation/components/custom_elevation.dart';
@@ -198,8 +199,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     update();
     var socket = UserScopeWidget.of(context).socketHelper;
 
-    socket.sendData('on_create_room',
-        {'room_name': nameController.value.text.trim(), 'thumb_image_key': uploadedAvatarKey});
+    socket.sendData('on_create_room', {
+      'room_name': nameController.value.text.trim(),
+      'thumb_image_key': uploadedAvatarKey,
+      'private_key': EncryptInteractor(UserScopeWidget.of(context)).generateRandomKey()
+    });
     socket.createRoomCompleter = Completer();
     bool result =
         await socket.createRoomCompleter.future.timeout(Duration(seconds: 3)).catchError((e) {

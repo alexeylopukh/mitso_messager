@@ -1,9 +1,13 @@
+import 'package:messager/data/store/cloud/chat_key_cloud_store.dart';
 import 'package:messager/data/store/local/chat_key_local_store.dart';
 
 class ChatKeysRepository {
   final ChatKeyLocalStore chatKeyLocalStore = ChatKeyLocalStore();
+  final ChatKeysCloudStore chatKeysCloudStore;
 
   Map<int, String> keys;
+
+  ChatKeysRepository(this.chatKeysCloudStore);
 
   Future<String> getRoomKey(int roomId) async {
     if (keys == null || !keys.containsKey(roomId)) {
@@ -18,7 +22,11 @@ class ChatKeysRepository {
   }
 
   Future _loadKeys() async {
-    keys = await chatKeyLocalStore.addChatKeys({1: "k3N92Fu1c19GUSoxXXkUjvcsYTK43dGAyzu7CA6Lkiw="});
-    return keys;
+    try {
+      return await chatKeysCloudStore.getKeys();
+    } catch (e) {
+      await Future.delayed(Duration(seconds: 1));
+      return _loadKeys();
+    }
   }
 }

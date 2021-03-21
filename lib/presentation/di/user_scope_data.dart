@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:messager/data/repository/chat_keys_repository.dart';
+import 'package:messager/data/store/cloud/chat_key_cloud_store.dart';
 import 'package:messager/data/store/local/rooms_local_store.dart';
 import 'package:messager/interactor/socket_interactor.dart';
 import 'package:messager/objects/profile.dart';
@@ -22,10 +23,11 @@ class UserScopeData {
   SocketInteractor get socketInteractor => socketHelper.socketInteractor;
   RoomsLocalStore roomsLocalStore;
   SharedPreferences _prefs;
-  final ChatKeysRepository chatKeysRepository = ChatKeysRepository();
+  ChatKeysRepository chatKeysRepository;
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
     roomsLocalStore = RoomsLocalStore(this);
+    chatKeysRepository = ChatKeysRepository(ChatKeysCloudStore(this));
   }
 
   BehaviorSubject<KeyboardOpenedData> keyboardStream =

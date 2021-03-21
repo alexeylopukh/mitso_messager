@@ -49,6 +49,8 @@ class EncryptInteractor {
     return encrypt.Encrypter(encrypt.AES(key));
   }
 
+  String generateRandomKey() => encrypt.Key.fromSecureRandom(32).base64;
+
   String _encryptMessage({@required message, @required encrypt.Encrypter encrypter}) {
     return encrypter.encrypt(message, iv: iv).base64;
   }
