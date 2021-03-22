@@ -1,9 +1,12 @@
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/components/custom_button.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
+import 'package:messager/presentation/di/user_scope_data.dart';
+import 'package:messager/presentation/live_video_chat_screen/live_chat_call_screen.dart';
 
 class ProfileViewScreen extends StatefulWidget {
   final Profile profile;
@@ -42,10 +45,19 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
         Spacer(),
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
-          child: AvatarView(
-              size: MediaQuery.of(context).size.width - 100,
-              avatarKey: profile.avatarUrl,
-              name: profile.name),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return ProfileViewScreen(
+                  profile: profile,
+                );
+              }));
+            },
+            child: AvatarView(
+                size: MediaQuery.of(context).size.width - 100,
+                avatarKey: profile.avatarUrl,
+                name: profile.name),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -84,7 +96,18 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
-                onTap: () {}),
+                onTap: () {
+                  UserScopeWidget.of(context).socketHelper.sendData("call_request", {
+                    "agora_room": "test",
+                    "user_id": [profile.id]
+                  });
+                  Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                    return CallPage(
+                      role: ClientRole.Broadcaster,
+                      channelName: 'test',
+                    );
+                  }));
+                }),
           ],
         ),
         Spacer(),

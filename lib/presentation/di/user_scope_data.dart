@@ -24,6 +24,7 @@ class UserScopeData {
   RoomsLocalStore roomsLocalStore;
   SharedPreferences _prefs;
   ChatKeysRepository chatKeysRepository;
+  StreamController<bool> incomingCallListener = StreamController.broadcast();
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
     roomsLocalStore = RoomsLocalStore(this);
@@ -92,6 +93,7 @@ class UserScopeData {
     socketInteractor.dispose();
     keyboardStream.close();
     goToChatRoomStream.close();
+    incomingCallListener.close();
   }
 }
 

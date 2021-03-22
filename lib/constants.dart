@@ -7,3 +7,5 @@ const String INTERNAL_ERROR_MESSAGE = 'Внутрення ошибка серв�
 const String COMMUNICATION_ERROR_MESSAGE = 'Ошибка соединение. Проверьте ваше интернет соединение';
 const String TIMEOUT_ERROR_MESSAGE = 'Сервер не отвечает';
 const String UNKNOWN_ERROR_MESSAGE = 'Неизвестная ошибка';
+
+const String APP_ID = "53e4552bc6f644a88a76add3af8d7d56";

@@ -106,6 +106,9 @@ class SocketHelper {
       socketInteractor.handleNewMessage(message);
       print(value);
     });
+    _socket.on('on_call_request', (value) async {
+      userScope.incomingCallListener.add(true);
+    });
     _socket.on('events', (value) async {
       if (value is String) {
         if (value == "rooms_update") {
