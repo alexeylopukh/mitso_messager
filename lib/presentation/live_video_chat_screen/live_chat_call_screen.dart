@@ -61,7 +61,7 @@ class _CallPageState extends State<CallPage> {
     configuration.dimensions = VideoDimensions(1920, 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
     await _engine.joinChannel(
-        "00653e4552bc6f644a88a76add3af8d7d56IADTIvUZcHPYFTnEMTfrXpTnTb9fRB1htupcr+DhkoSX/Ax+f9gAAAAAEABfjXZEkAxZYAEAAQCQDFlg",
+        "00653e4552bc6f644a88a76add3af8d7d56IACTO2D1fi7tw9ajFZKf60AYbkm3GlPXhJ12/H1KX9vUNgx+f9gAAAAAEAC5X9YGxJpZYAEAAQDDmllg",
         widget.channelName,
         null,
         0);
