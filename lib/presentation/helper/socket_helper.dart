@@ -141,6 +141,9 @@ class SocketHelper {
       if (getChatMessagesCompleter != null && !getChatMessagesCompleter.isCompleted)
         getChatMessagesCompleter.complete(messages);
     });
+    _socket.on('on_delete_message', (value) {
+      print(value);
+    });
     _socket.on('on_typing', (value) {
       if (value['profile'] == null || value['typing'] == null || value['room_id'] == null) return;
       Profile profile = Profile.fromJson(value['profile']);

@@ -71,6 +71,11 @@ class SocketInteractor {
     }
   }
 
+  void deleteMessage(ChatMessage message) {
+    socket.sendData("on_delete_message",
+        {"token": userScope.token, "message_id": message.id, "roomId": message.roomId});
+  }
+
   Future<List<ChatMessage>> getChatHistory(int roomId, int messageId) async {
     socket.getChatMessagesCompleter = Completer();
     socket.sendData(

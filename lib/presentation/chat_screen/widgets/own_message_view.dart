@@ -4,6 +4,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:intl/intl.dart';
 import 'package:messager/objects/chat_message.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
+import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/open_url_helper.dart';
 
 import 'chat_screen_attached_images.dart';
@@ -121,7 +122,7 @@ class _OwnMessageViewState extends State<OwnMessageView> {
                 Icon(Icons.delete_rounded),
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
-                  child: Text('Delete'),
+                  child: Text('Удалить'),
                 )
               ],
             ),
@@ -132,6 +133,6 @@ class _OwnMessageViewState extends State<OwnMessageView> {
             Offset(0, -MediaQuery.of(context).viewInsets.bottom) &
                 overlay.size // Bigger rect, the entire screen
             ));
-    print(result);
+    if (result == 1) UserScopeWidget.of(context).socketInteractor.deleteMessage(widget.chatMessage);
   }
 }
