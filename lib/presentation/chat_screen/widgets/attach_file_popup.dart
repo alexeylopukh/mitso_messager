@@ -39,11 +39,14 @@ Future<PickedFiles> showAttachFilePopup(BuildContext context) async {
                   if (file != null) pickedFiles = PickedFiles([file], PickFileType.Image);
                   Navigator.pop(context);
                 }),
-//                _buildPopupItem('Файлы', context, () async {
-//                  List<File> files = await FilePicker.getMultiFile(type: FileType.any);
-//                  if (files != null) pickedFiles = PickedFiles(files, PickFileType.Document);
-//                  Navigator.pop(context);
-//                })
+                _buildPopupItem('Файлы', context, () async {
+                  FilePickerResult result =
+                      await FilePicker.platform.pickFiles(allowMultiple: true);
+                  if (result != null)
+                    pickedFiles = PickedFiles(
+                        result.paths.map((path) => File(path)).toList(), PickFileType.Document);
+                  Navigator.pop(context);
+                })
               ],
             ),
           ));

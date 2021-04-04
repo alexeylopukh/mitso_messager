@@ -55,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         65,
                   ),
                   reverse: true,
-                  itemCount: _presenter.viewModel.messages.length,
+                  itemCount: _presenter.viewModel.messages.length + 1,
                   itemBuilder: (context, index) {
                     if (index == 0)
                       return StreamBuilder<TypingUser>(
