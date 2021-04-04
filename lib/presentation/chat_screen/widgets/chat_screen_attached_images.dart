@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/objects/chat_message_image.dart';
 import 'package:messager/presentation/view_images_screen/view_images_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../constants.dart';
 
 class ChatScreenAttachedImages extends StatefulWidget {
-  final List<String> imageKeys;
+  final List<ChatMessageImage> imageKeys;
 
   const ChatScreenAttachedImages({Key key, @required this.imageKeys}) : super(key: key);
 
@@ -15,7 +16,7 @@ class ChatScreenAttachedImages extends StatefulWidget {
 }
 
 class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
-  List<String> get imageKeys => widget.imageKeys;
+  List<ChatMessageImage> get imageKeys => widget.imageKeys;
   double width;
 
   @override
@@ -295,7 +296,7 @@ class _ChatScreenAttachedImagesState extends State<ChatScreenAttachedImages> {
           child: Hero(
             tag: imageKeys[index],
             child: CachedNetworkImage(
-              imageUrl: API_URL + '/' + imageKeys[index],
+              imageUrl: API_URL + '/' + imageKeys[index].key,
               fit: BoxFit.cover,
               repeat: ImageRepeat.repeat,
               placeholder: (c, s) {

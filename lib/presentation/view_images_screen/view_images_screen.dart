@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/objects/chat_message_image.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 import '../../constants.dart';
 
 class ViewImagesScreen extends StatefulWidget {
-  final List<String> imageKeys;
+  final List<ChatMessageImage> imageKeys;
   final int initalPage;
 
   const ViewImagesScreen({Key key, @required this.imageKeys, @required this.initalPage})
@@ -56,11 +57,11 @@ class _ViewImagesScreenState extends State<ViewImagesScreen> {
                       ? Hero(
                           tag: widget.imageKeys[i],
                           child: CachedNetworkImage(
-                            imageUrl: API_URL + '/' + widget.imageKeys[i],
+                            imageUrl: API_URL + '/' + widget.imageKeys[i].key,
                           ),
                         )
                       : CachedNetworkImage(
-                          imageUrl: API_URL + '/' + widget.imageKeys[i],
+                          imageUrl: API_URL + '/' + widget.imageKeys[i].key,
                         ),
                   childSize:
                       Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),

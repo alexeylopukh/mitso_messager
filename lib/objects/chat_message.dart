@@ -1,3 +1,4 @@
+import 'package:messager/objects/chat_message_image.dart';
 import 'package:messager/objects/profile.dart';
 
 class ChatMessage {
@@ -9,7 +10,7 @@ class ChatMessage {
   String encryptedMessage;
   DateTime date;
   Profile sender;
-  List<String> photos;
+  List<ChatMessageImage> photos;
   bool isSended;
 
   ChatMessage(
@@ -32,7 +33,9 @@ class ChatMessage {
       encryptedMessage: json["encryptedMessage"],
       cryptedMessage: json["text"],
       date: DateTime.fromMillisecondsSinceEpoch(json["date"] * 1000),
-      photos: json['photos'] == null ? [] : json['photos'].cast<String>(),
+      photos: json["photos"] == null
+          ? []
+          : List<ChatMessageImage>.from(json["photos"].map((x) => ChatMessageImage.fromJson(x))),
       sender:
           json["user"] != null ? Profile.fromJson(json["user"]) : Profile.fromJson(json["sender"]),
       isSended: json["is_sended"] == null ? true : json["is_sended"]);
@@ -47,7 +50,7 @@ class ChatMessage {
         "date": date.millisecondsSinceEpoch ~/ 1000,
         "user": sender.toJson(),
         "is_sended": isSended,
-        "photos": photos,
+        "photos": photos == null ? null : List<dynamic>.from(photos.map((x) => x.toJson())),
       };
 
   @override

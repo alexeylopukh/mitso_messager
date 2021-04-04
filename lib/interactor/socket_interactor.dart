@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:messager/data/store/local/unsent_messages_store.dart';
 import 'package:messager/interactor/encrypt_interactor.dart';
 import 'package:messager/objects/chat_message.dart';
+import 'package:messager/objects/chat_message_image.dart';
 import 'package:messager/objects/chat_room.dart';
 import 'package:messager/objects/news_model.dart';
 import 'package:messager/objects/typing_user.dart';
@@ -60,7 +61,7 @@ class SocketInteractor {
         uuid: Uuid().v4(),
         sender: userScope.myProfile,
         date: DateTime.now(),
-        photos: photos ?? [],
+        photos: photos.map((e) => ChatMessageImage(key: e)).toList(),
         isSended: false);
     if (unsendedMessages.value.isNotEmpty) {
       _addNewUnsendedMessage(chatMessage);
@@ -85,7 +86,7 @@ class SocketInteractor {
       "room_id": chatMessage.roomId,
       "uuid": chatMessage.uuid,
       "text": chatMessage.cryptedMessage,
-      "photos": chatMessage.photos
+      "photos": chatMessage.photos.map((e) => e.key).toList()
     });
   }
 

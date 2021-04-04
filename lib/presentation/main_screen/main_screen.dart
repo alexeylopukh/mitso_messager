@@ -79,6 +79,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       IncomingPushHelper().handlePush(event.data, _presenter.userScope);
     });
     FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
+      if (message == null) return;
       Future.delayed(Duration(milliseconds: 1000)).then((value) {
         return IncomingPushHelper().handlePush(message.data, _presenter.userScope);
       });
