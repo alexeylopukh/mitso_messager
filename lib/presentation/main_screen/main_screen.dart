@@ -1,13 +1,12 @@
-import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/presentation/call_screen.dart';
 import 'package:messager/presentation/chat_rooms_view/chat_rooms_view.dart';
 import 'package:messager/presentation/components/animated_index_stack.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
 import 'package:messager/presentation/components/popups.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/incoming_push_token.dart';
-import 'package:messager/presentation/live_video_chat_screen/live_chat_call_screen.dart';
 import 'package:messager/presentation/main_screen/main_screen_presenter.dart';
 import 'package:messager/presentation/more_screen/more_screen.dart';
 import 'package:messager/presentation/more_screen/more_screen_tab_bar.dart';
@@ -35,9 +34,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       init();
       UserScopeWidget.of(context).incomingCallListener.stream.listen((event) {
         Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-          return CallPage(
-            role: ClientRole.Broadcaster,
-            channelName: 'test',
+          return CallScreen(
+            callRequest: event,
           );
         }));
       });
@@ -72,13 +70,18 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     UserScopeWidget.of(context).messagesStream.listen((String message) {
       Popups.showModalDialog(context, PopupState.OK, description: message);
     });
-    // FirebaseMessaging.onMessage.listen((event) {
-    //   // print('onMessage');
-    //   // return IncomingPushHelper().handlePush(event.data, _presenter.userScope);
-    // });
+    FirebaseMessaging.onMessage.listen((event) {
+      print('onMessage');
+      return IncomingPushHelper().handlePush(event.data, _presenter.userScope);
+    });
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       print('onMessageOpenedApp');
-      return IncomingPushHelper().handlePush(event.data, _presenter.userScope);
+      IncomingPushHelper().handlePush(event.data, _presenter.userScope);
+    });
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage message) {
+      Future.delayed(Duration(milliseconds: 1000)).then((value) {
+        return IncomingPushHelper().handlePush(message.data, _presenter.userScope);
+      });
     });
   }
 

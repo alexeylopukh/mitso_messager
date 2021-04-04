@@ -8,6 +8,7 @@ import 'package:messager/data/repository/chat_keys_repository.dart';
 import 'package:messager/data/store/cloud/chat_key_cloud_store.dart';
 import 'package:messager/data/store/local/rooms_local_store.dart';
 import 'package:messager/interactor/socket_interactor.dart';
+import 'package:messager/objects/call_request.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/keyboard_size.dart';
 import 'package:messager/presentation/helper/fcm_helper.dart';
@@ -24,7 +25,7 @@ class UserScopeData {
   RoomsLocalStore roomsLocalStore;
   SharedPreferences _prefs;
   ChatKeysRepository chatKeysRepository;
-  StreamController<bool> incomingCallListener = StreamController.broadcast();
+  StreamController<CallRequest> incomingCallListener = StreamController.broadcast();
 
   UserScopeData({@required this.state, @required this.isColdStart}) {
     roomsLocalStore = RoomsLocalStore(this);

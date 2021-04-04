@@ -3,6 +3,7 @@ import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/components/custom_button.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
+import 'package:messager/presentation/profile_view_screen/profile_view_screen.dart';
 
 class UserItemView extends StatelessWidget {
   final Profile profile;
@@ -19,10 +20,19 @@ class UserItemView extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: AvatarView(
-              avatarKey: profile.avatarUrl,
-              name: profile.name,
-              size: 55.0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                  return ProfileViewScreen(
+                    profile: profile,
+                  );
+                }));
+              },
+              child: AvatarView(
+                avatarKey: profile.avatarUrl,
+                name: profile.name,
+                size: 55.0,
+              ),
             ),
           ),
           Expanded(

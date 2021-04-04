@@ -14,7 +14,10 @@ class CallPage extends StatefulWidget {
   final ClientRole role;
 
   /// Creates a call page with given channel name.
-  const CallPage({Key key, @required this.channelName, @required this.role}) : super(key: key);
+  const CallPage({Key key, @required this.channelName, @required this.role, @required this.token})
+      : super(key: key);
+
+  final String token;
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -53,18 +56,13 @@ class _CallPageState extends State<CallPage> {
       });
       return;
     }
-
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     await _engine.enableWebSdkInteroperability(true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1920, 1080);
     await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(
-        "00653e4552bc6f644a88a76add3af8d7d56IACTO2D1fi7tw9ajFZKf60AYbkm3GlPXhJ12/H1KX9vUNgx+f9gAAAAAEAC5X9YGxJpZYAEAAQDDmllg",
-        widget.channelName,
-        null,
-        0);
+    await _engine.joinChannel(widget.token, widget.channelName, null, 0);
   }
 
   /// Create agora sdk instance and initialize

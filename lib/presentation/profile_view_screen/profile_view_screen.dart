@@ -1,5 +1,6 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/network/rpc/generate_agora_token_rpc.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/components/custom_button.dart';
@@ -46,13 +47,7 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                return ProfileViewScreen(
-                  profile: profile,
-                );
-              }));
-            },
+            onTap: () {},
             child: AvatarView(
                 size: MediaQuery.of(context).size.width - 100,
                 avatarKey: profile.avatarUrl,
@@ -96,15 +91,19 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
-                onTap: () {
+                onTap: () async {
+                  String token = await GenerateAgoraToken(UserScopeWidget.of(context))
+                      .generateToken(profile.id.toString());
                   UserScopeWidget.of(context).socketHelper.sendData("call_request", {
-                    "agora_room": "test",
+                    "agora_room": token,
                     "user_id": [profile.id]
                   });
+
                   Navigator.of(context).push(MaterialPageRoute(builder: (c) {
                     return CallPage(
                       role: ClientRole.Broadcaster,
-                      channelName: 'test',
+                      channelName: profile.id.toString(),
+                      token: token,
                     );
                   }));
                 }),
