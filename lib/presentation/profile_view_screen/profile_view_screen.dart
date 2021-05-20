@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:messager/interactor/encrypt_interactor.dart';
 import 'package:messager/network/rpc/generate_agora_token_rpc.dart';
+import 'package:messager/objects/chat_room.dart';
 import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/components/custom_button.dart';
@@ -79,7 +83,50 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
-                onTap: () {}),
+                onTap: () async {
+                  List<ChatRoom> chatRooms =
+                      await UserScopeWidget.of(context).roomsLocalStore.get();
+                  if (chatRooms != null) {
+                    ChatRoom chatRoom;
+                    try {
+                      chatRoom = chatRooms.firstWhere((element) {
+                        return profile.email == element?.user?.email;
+                      });
+                    } catch (e) {}
+                    if (chatRoom != null) {
+                      UserScopeWidget.of(context).goToChatRoomStream.add(chatRoom.id);
+                      return;
+                    }
+                  }
+                  var socket = UserScopeWidget.of(context).socketHelper;
+                  socket.sendData('on_create_room', {
+                    'room_name': "direct",
+                    'thumb_image_key': "",
+                    'private_key':
+                        EncryptInteractor(UserScopeWidget.of(context)).generateRandomKey(),
+                    'user_id': profile.id,
+                    'is_direct': true,
+                  });
+                  socket.createRoomCompleter = Completer();
+                  bool result = await socket.createRoomCompleter.future
+                      .timeout(Duration(seconds: 3))
+                      .catchError((e) {
+                    //ignore
+                  });
+                  chatRooms = await UserScopeWidget.of(context).roomsLocalStore.get();
+                  if (chatRooms != null) {
+                    ChatRoom chatRoom;
+                    try {
+                      chatRoom = chatRooms.firstWhere((element) {
+                        return profile.email == element?.user?.email;
+                      });
+                    } catch (e) {}
+                    if (chatRoom != null) {
+                      UserScopeWidget.of(context).goToChatRoomStream.add(chatRoom.id);
+                      return;
+                    }
+                  }
+                }),
             Container(
               width: 10,
             ),

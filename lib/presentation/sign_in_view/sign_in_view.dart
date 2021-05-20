@@ -138,6 +138,7 @@ class _SignInViewState extends State<SignInView> {
   showErrorDialog(String text) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Popups.showModalDialog(context, PopupState.OK, title: 'Ошибка', description: text);
+      _presenter.viewModelStream.valueWrapper.value.errorText = null;
     });
   }
 

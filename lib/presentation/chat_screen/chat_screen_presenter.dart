@@ -117,6 +117,7 @@ class ChatScreenPresenter {
     UploadImage currentUploadImage = UploadImage(
       file,
       UploadImageState.Uploading,
+      PickFileType.Image,
     );
     currentUploadImage.onRetryClick = () {
       currentUploadImage.state = UploadImageState.Uploading;

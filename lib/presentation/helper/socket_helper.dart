@@ -26,6 +26,8 @@ class SocketHelper {
   Completer<bool> chatHistoryCompleter;
   Completer<List<ChatMessage>> getChatMessagesCompleter;
 
+  Completer<bool> onChatRoomCompleter;
+
   SocketHelper({@required this.userScope}) {
     _socket = io(WEB_SOCKET_URL, <String, dynamic>{
       'path': '/srv/',
@@ -117,11 +119,20 @@ class SocketHelper {
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       await EncryptInteractor(userScope).decryptRooms(rooms);
       socketInteractor.appendChatRooms(rooms);
+      if (onChatRoomCompleter != null) {
+        onChatRoomCompleter.complete();
+      }
       if (chatHistoryCompleter != null && !chatHistoryCompleter.isCompleted) {
         chatHistoryCompleter.complete(true);
       }
     });
-    _socket.on('on_create_room', (value) {
+    _socket.on('on_create_room', (value) async {
+      onChatRoomCompleter = Completer();
+      sendData('on_rooms', {});
+      await onChatRoomCompleter.future.timeout(Duration(seconds: 3));
+      await Future.delayed(Duration(milliseconds: 500));
+      print('on_create_room');
+      print(value);
       if (createRoomCompleter != null && !createRoomCompleter.isCompleted) {
         createRoomCompleter.complete(value != null);
       }

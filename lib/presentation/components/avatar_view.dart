@@ -8,11 +8,7 @@ class AvatarView extends StatefulWidget {
   final String avatarKey;
   final String name;
 
-  const AvatarView(
-      {Key key,
-      @required this.size,
-      @required this.avatarKey,
-      @required this.name})
+  const AvatarView({Key key, @required this.size, @required this.avatarKey, @required this.name})
       : super(key: key);
   @override
   _AvatarViewState createState() => _AvatarViewState();
@@ -35,14 +31,13 @@ class _AvatarViewState extends State<AvatarView> {
               ? null
               : DecorationImage(
                   fit: BoxFit.cover,
-                  image: CachedNetworkImageProvider(
-                      API_URL + '/' + widget.avatarKey),
+                  image: CachedNetworkImageProvider(API_URL + '/' + widget.avatarKey),
                 ),
         ),
         child: widget.avatarKey == null
             ? Center(
                 child: Text(
-                  widget.name.split('').first.toUpperCase(),
+                  widget.name.isEmpty ? "" : widget.name.split('').first.toUpperCase(),
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: CustomTheme.of(context).boldFontFamily,

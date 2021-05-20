@@ -100,23 +100,24 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      isMenuOpened = !isMenuOpened;
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 45,
-                      height: 55,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.more_vert,
-                        size: 24,
-                        color: CustomTheme.of(context).primaryColor,
+                  if (!chatRoom.isDirect)
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        isMenuOpened = !isMenuOpened;
+                        setState(() {});
+                      },
+                      child: Container(
+                        width: 45,
+                        height: 55,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.more_vert,
+                          size: 24,
+                          color: CustomTheme.of(context).primaryColor,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -133,7 +134,7 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (chatRoom.id != 1)
+          if (chatRoom.id != 1 ?? !chatRoom.isDirect)
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50, top: 5),
               child: Text('id комнаты: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
