@@ -9,10 +9,20 @@ class ChatRoomsPresenter {
   SocketInteractor get socketInteractor => userScope.socketInteractor;
 
   ChatRoomsPresenter(this.userScope) {
-    _viewModelStream = BehaviorSubject.seeded(
-        ChatRoomsViewModel(rooms: socketInteractor.chatRoomStream.value));
+    _viewModelStream =
+        BehaviorSubject.seeded(ChatRoomsViewModel(rooms: socketInteractor.chatRoomStream.value));
     socketInteractor.chatRoomStream.listen((List<ChatRoom> rooms) {
       _viewModelStream.add(ChatRoomsViewModel(rooms: rooms));
+    });
+    userScope.deleteChatStream.stream.listen((int messageId) {
+      _viewModelStream.stream.value.rooms.forEach((room) {
+        try {
+          room.messages.removeWhere((message) {
+            return message.id == messageId;
+          });
+        } catch (e) {}
+      });
+      socketInteractor.chatRoomStream.add(_viewModelStream.stream.value.rooms);
     });
   }
   BehaviorSubject<ChatRoomsViewModel> _viewModelStream;

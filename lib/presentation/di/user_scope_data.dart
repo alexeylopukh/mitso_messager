@@ -36,6 +36,7 @@ class UserScopeData {
       BehaviorSubject.seeded(KeyboardOpenedData(0, false));
 
   BehaviorSubject<String> messagesStream = BehaviorSubject();
+  StreamController<int> deleteChatStream = StreamController.broadcast();
 
   BehaviorSubject<int> goToChatRoomStream = BehaviorSubject();
 
@@ -95,6 +96,7 @@ class UserScopeData {
     keyboardStream.close();
     goToChatRoomStream.close();
     incomingCallListener.close();
+    deleteChatStream.close();
   }
 }
 

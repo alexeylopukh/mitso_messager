@@ -153,6 +153,7 @@ class SocketHelper {
         getChatMessagesCompleter.complete(messages);
     });
     _socket.on('on_delete_message', (value) {
+      userScope.deleteChatStream.add(value["message_id"]);
       print(value);
     });
     _socket.on('on_typing', (value) {
