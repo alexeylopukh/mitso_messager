@@ -119,10 +119,10 @@ class _MoreScreenState extends State<MoreScreen> {
                         height: 50,
                         child: Align(
                           alignment: Alignment.center,
-                          child: SizedBox(
-                              height: 34,
-                              width: 34,
-                              child: SvgPicture.asset('assets/icons/ic_qr.svg')),
+                          child: Icon(
+                            Icons.add,
+                            size: 34,
+                          ),
                         )),
                     Text('Создать чат', style: TextStyle(fontSize: 20)),
                   ],
@@ -153,7 +153,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           Icons.exit_to_app,
                           size: 28,
                         )),
-                    Text('Присоединиться к чату по ID', style: TextStyle(fontSize: 20)),
+                    Text('Присоединиться к чату по №', style: TextStyle(fontSize: 20)),
                   ],
                 ),
               ),

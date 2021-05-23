@@ -23,12 +23,17 @@ class _ChatRoomsViewState extends State<ChatRoomsView> {
     if (_presenter == null) {
       _presenter = ChatRoomsPresenter(UserScopeWidget.of(context));
       UserScopeWidget.of(context).goToChatRoomStream.listen((int roomId) {
-        Navigator.push(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => ChatScreen(
-                      roomId: roomId,
-                    )));
+        if (roomId == -1) {
+          while (Navigator.canPop(context)) {
+            Navigator.of(context).pop();
+          }
+        } else
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => ChatScreen(
+                        roomId: roomId,
+                      )));
       });
     }
 

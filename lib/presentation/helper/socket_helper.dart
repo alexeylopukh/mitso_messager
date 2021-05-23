@@ -125,7 +125,7 @@ class SocketHelper {
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       await EncryptInteractor(userScope).decryptRooms(rooms);
       socketInteractor.appendChatRooms(rooms);
-      if (onChatRoomCompleter != null) {
+      if (onChatRoomCompleter != null && !onChatRoomCompleter.isCompleted) {
         onChatRoomCompleter.complete();
       }
       if (chatHistoryCompleter != null && !chatHistoryCompleter.isCompleted) {
@@ -142,6 +142,10 @@ class SocketHelper {
       if (createRoomCompleter != null && !createRoomCompleter.isCompleted) {
         createRoomCompleter.complete(value != null);
       }
+    });
+    _socket.on('on_leave_room', (value) {
+      userScope.goToChatRoomStream.add(-1);
+      sendData('on_rooms', {});
     });
     _socket.on('on_join_chat', (value) {
       if (joinChatCompleter != null) {

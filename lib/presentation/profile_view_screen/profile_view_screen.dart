@@ -9,6 +9,7 @@ import 'package:messager/objects/profile.dart';
 import 'package:messager/presentation/components/avatar_view.dart';
 import 'package:messager/presentation/components/custom_button.dart';
 import 'package:messager/presentation/components/general_scaffold.dart';
+import 'package:messager/presentation/components/popups.dart';
 import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/live_video_chat_screen/live_chat_call_screen.dart';
@@ -108,11 +109,13 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                     'is_direct': true,
                   });
                   socket.createRoomCompleter = Completer();
-                  bool result = await socket.createRoomCompleter.future
-                      .timeout(Duration(seconds: 3))
-                      .catchError((e) {
-                    //ignore
-                  });
+                  bool result = await Popups.showProgressPopup(
+                      context,
+                      socket.createRoomCompleter.future
+                          .timeout(Duration(seconds: 3))
+                          .catchError((e) {
+                        //ignore
+                      }));
                   chatRooms = await UserScopeWidget.of(context).roomsLocalStore.get();
                   if (chatRooms != null) {
                     ChatRoom chatRoom;

@@ -12,6 +12,7 @@ import 'package:messager/presentation/di/custom_theme.dart';
 import 'package:messager/presentation/helper/ini_links_generator.dart';
 import 'package:messager/presentation/qr_code_view/qr_code_view.dart';
 import 'package:share/share.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatScreenAppBar extends StatefulWidget {
   final ChatRoom chatRoom;
@@ -31,6 +32,7 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    if (chatRoom == null) return Container();
     double navBarHeight = MediaQuery.of(context).padding.top + 55;
     double navBarWithMenu = MediaQuery.of(context).size.height;
     return AnimatedContainer(
@@ -76,7 +78,7 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
                     ),
                   ),
                   Hero(
-                      tag: chatRoom.id,
+                      tag: chatRoom.id ?? Uuid().v4(),
                       child: AvatarView(
                         avatarKey: chatRoom.imageKey,
                         name: chatRoom.name,
@@ -100,24 +102,23 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
                       ],
                     ),
                   ),
-                  if (!chatRoom.isDirect)
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        isMenuOpened = !isMenuOpened;
-                        setState(() {});
-                      },
-                      child: Container(
-                        width: 45,
-                        height: 55,
-                        alignment: Alignment.center,
-                        child: Icon(
-                          Icons.more_vert,
-                          size: 24,
-                          color: CustomTheme.of(context).primaryColor,
-                        ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      isMenuOpened = !isMenuOpened;
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: 45,
+                      height: 55,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.more_vert,
+                        size: 24,
+                        color: CustomTheme.of(context).primaryColor,
                       ),
                     ),
+                  ),
                 ],
               ),
             ),
@@ -129,15 +130,52 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
   }
 
   Widget navBarMenu() {
+    if (chatRoom.isDirect)
+      return Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  widget.chatScreenPresenter.onLeaveExitClick();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                          width: 50,
+                          height: 50,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                height: 34,
+                                width: 34,
+                                child: Icon(Icons.delete_rounded),
+                              ))),
+                      Text('Удалить чат', style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (chatRoom.id != 1 ?? !chatRoom.isDirect)
+          if (chatRoom.id != 1)
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50, top: 5),
-              child: Text('id комнаты: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
+              child: Text('Комната №: ${chatRoom.id}', style: TextStyle(fontSize: 20)),
             ),
           Material(
             color: Colors.transparent,
@@ -238,6 +276,35 @@ class _ChatScreenAppBarState extends State<ChatScreenAppBar> {
               ),
             ),
           ),
+          if (chatRoom.id != 1)
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  widget.chatScreenPresenter.onLeaveExitClick();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                          width: 50,
+                          height: 50,
+                          child: Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                height: 34,
+                                width: 34,
+                                child: Icon(Icons.exit_to_app_rounded),
+                              ))),
+                      Text('Выйти из чата', style: TextStyle(fontSize: 20)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           if (widget.chatScreenPresenter.viewModel.users != null)
             Expanded(
                 child: ListView.builder(

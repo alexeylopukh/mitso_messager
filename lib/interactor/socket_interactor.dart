@@ -134,7 +134,21 @@ class SocketInteractor {
 
   _sendFirstUnsendedMessage() async {
     if (unsendedMessages.value.isEmpty) return;
-    _sendMessageWithSocket(unsendedMessages.value.first);
+    bool haveRoom = false;
+    int roomId = unsendedMessages.value.first.roomId;
+    try {
+      final rooms = await userScope.roomsLocalStore.get();
+      final room = rooms.firstWhere((element) {
+        return element.id == roomId;
+      });
+      haveRoom = room != null;
+    } catch (e) {}
+    if (haveRoom) {
+      _sendMessageWithSocket(unsendedMessages.value.first);
+    } else {
+      _tryDeleteUnsentMessage(unsendedMessages.value.first);
+      _sendFirstUnsendedMessage();
+    }
   }
 
   void ddos(ChatMessage message) async {

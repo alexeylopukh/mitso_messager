@@ -204,11 +204,19 @@ class ChatScreenPresenter {
   }
 
   void updateView() async {
+    if (viewModel.chatRoom == null) return;
     List<ChatMessage> messages = [];
     messages.addAll(unsendedMessages);
     messages.addAll(viewModel.chatRoom.messages);
     viewModel.messages = messages;
     _viewModelStream.add(viewModel);
+  }
+
+  void onLeaveExitClick() async {
+    socketInteractor.socket.sendData("on_leave_room", {
+      "room_id": viewModel.chatRoom.id,
+      "is_direct": viewModel.chatRoom.isDirect,
+    });
   }
 
   void dispose() {
