@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 import 'package:messager/constants.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -47,6 +48,11 @@ class _CallPageState extends State<CallPage> {
   }
 
   Future<void> initialize() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+
     if (APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
@@ -292,14 +298,14 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agora Flutter QuickStart'),
+        title: Text(''),
       ),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(
           children: <Widget>[
             _viewRows(),
-            _panel(),
+            // _panel(),
             _toolbar(),
           ],
         ),

@@ -55,6 +55,7 @@ class SocketInteractor {
 
   sendMessage(
       int roomId, String message, List<String> photos, List<ChatMessageDocument> files) async {
+    if (message.isEmpty) message = " ";
     var chatMessage = ChatMessage(
         roomId: roomId,
         encryptedMessage: message,

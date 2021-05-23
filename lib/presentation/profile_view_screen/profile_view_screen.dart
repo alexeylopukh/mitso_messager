@@ -142,8 +142,11 @@ class _ProfileViewScreenState extends State<ProfileViewScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
                 onTap: () async {
-                  String token = await GenerateAgoraToken(UserScopeWidget.of(context))
-                      .generateToken(profile.id.toString());
+                  String token = await Popups.showProgressPopup(
+                      context,
+                      GenerateAgoraToken(UserScopeWidget.of(context))
+                          .generateToken(profile.id.toString()));
+                  if (token == null) return;
                   UserScopeWidget.of(context).socketHelper.sendData("call_request", {
                     "agora_room": token,
                     "user_id": [profile.id]
