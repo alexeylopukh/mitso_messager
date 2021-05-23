@@ -9,12 +9,14 @@ import 'package:messager/interactor/typing_detector.dart';
 import 'package:messager/network/rpc/get_room_member_rpc.dart';
 import 'package:messager/network/rpc/upload_image.dart';
 import 'package:messager/objects/chat_message.dart';
+import 'package:messager/objects/chat_message_image.dart';
 import 'package:messager/objects/chat_room.dart';
 import 'package:messager/objects/upload_image.dart';
 import 'package:messager/presentation/chat_screen/chat_screen_view_model.dart';
 import 'package:messager/presentation/chat_screen/widgets/attach_file_popup.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:messager/presentation/helper/socket_helper.dart';
+import 'package:path/path.dart';
 
 class ChatScreenPresenter {
   final UserScopeData userScope;
@@ -26,6 +28,9 @@ class ChatScreenPresenter {
 
   StreamController<List<UploadImage>> uploadImagesStream = StreamController();
   List<UploadImage> uploadImages = [];
+
+  StreamController<List<UploadImage>> uploadFilesStream = StreamController();
+  List<UploadImage> uploadFiles = [];
 
   bool screenIsBuilded = false;
 
@@ -93,23 +98,17 @@ class ChatScreenPresenter {
     return foundedRoom;
   }
 
-  uploadFiles(PickedFiles pickedFiles) {
-    switch (pickedFiles.type) {
-      case PickFileType.Document:
-        break;
-      case PickFileType.Image:
-        pickedFiles.files.forEach((photo) {
-          uploadImage(photo);
-        });
-        break;
-    }
+  void uploadPickedFiles(PickedFiles pickedFiles) {
+    pickedFiles.files.forEach((photo) {
+      uploadImage(photo, pickedFiles.type);
+    });
   }
 
-  uploadImage(File file) {
+  uploadImage(File file, PickFileType pickFileType) {
     if (uploadImages.length >= 10) {
       if (lastShowToast == null || DateTime.now().difference(lastShowToast).inSeconds > 1) {
         lastShowToast = DateTime.now();
-        Fluttertoast.showToast(msg: 'Максимальное кол-во фото 10 шт.');
+        Fluttertoast.showToast(msg: 'Максимальное кол-во файлов 10 шт.');
         return;
       }
       return;
@@ -117,13 +116,14 @@ class ChatScreenPresenter {
     UploadImage currentUploadImage = UploadImage(
       file,
       UploadImageState.Uploading,
-      PickFileType.Image,
+      pickFileType,
     );
     currentUploadImage.onRetryClick = () {
       currentUploadImage.state = UploadImageState.Uploading;
       uploadImagesStream.add(uploadImages);
-      Future<String> uploadWork =
-          UploadImageRpc(userScope).upload(file, isMessage: 1).catchError((e) {
+      Future<String> uploadWork = UploadImageRpc(userScope)
+          .upload(file, isMessage: 1, pickFileType: pickFileType)
+          .catchError((e) {
         currentUploadImage.state = UploadImageState.Error;
         uploadImagesStream.add(uploadImages);
       }).then((String value) {
@@ -138,8 +138,9 @@ class ChatScreenPresenter {
       currentUploadImage.operation = CancelableOperation<String>.fromFuture(uploadWork);
       uploadImagesStream.add(uploadImages);
     };
-    Future<String> uploadWork =
-        UploadImageRpc(userScope).upload(file, isMessage: 1).catchError((e) {
+    Future<String> uploadWork = UploadImageRpc(userScope)
+        .upload(file, isMessage: 1, pickFileType: pickFileType)
+        .catchError((e) {
       currentUploadImage.state = UploadImageState.Error;
       uploadImagesStream.add(uploadImages);
     }).then((String value) {
@@ -173,13 +174,25 @@ class ChatScreenPresenter {
     List<String> photos = [];
     if (uploadImages.isNotEmpty) {
       uploadImages.forEach((UploadImage i) {
-        photos.add(i.key);
+        if (i.fileType == PickFileType.Image) photos.add(i.key);
       });
-      uploadImages.clear();
+      uploadImages.removeWhere((element) {
+        return element.fileType == PickFileType.Image;
+      });
+      uploadImagesStream.add(uploadImages);
+    }
+    List<ChatMessageDocument> documents = [];
+    if (uploadImages.isNotEmpty) {
+      uploadImages.forEach((UploadImage i) {
+        documents.add(ChatMessageDocument(key: i.key, fileName: basename(i.file.path)));
+      });
+      uploadImages.removeWhere((element) {
+        return element.fileType == PickFileType.Document;
+      });
       uploadImagesStream.add(uploadImages);
     }
 
-    socketInteractor.sendMessage(roomId, message, photos);
+    socketInteractor.sendMessage(roomId, message, photos, documents);
   }
 
   bool haveUnuploadedPhoto() {
@@ -201,5 +214,6 @@ class ChatScreenPresenter {
   void dispose() {
     _viewModelStream?.close();
     uploadImagesStream?.close();
+    uploadFilesStream?.close();
   }
 }

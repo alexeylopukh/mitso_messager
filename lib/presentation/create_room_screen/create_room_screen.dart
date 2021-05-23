@@ -72,7 +72,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                       MediaQuery.of(context).viewInsets.bottom +
                       10,
                   left: 20,
-                  right: 20),
+                  right: 20,
+                  top: 20),
               child: CustomButton(
                 child: isNetworkOperation
                     ? CircularProgressIndicator(

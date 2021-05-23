@@ -53,7 +53,8 @@ class SocketInteractor {
     socket.sendData('on_create_news', {"title": title, "text": text, "uuid": Uuid().v4()});
   }
 
-  sendMessage(int roomId, String message, List<String> photos) async {
+  sendMessage(
+      int roomId, String message, List<String> photos, List<ChatMessageDocument> files) async {
     var chatMessage = ChatMessage(
         roomId: roomId,
         encryptedMessage: message,
@@ -61,6 +62,7 @@ class SocketInteractor {
         uuid: Uuid().v4(),
         sender: userScope.myProfile,
         date: DateTime.now(),
+        files: files,
         photos: photos.map((e) => ChatMessageImage(key: e)).toList(),
         isSended: false);
     if (unsendedMessages.value.isNotEmpty) {
@@ -91,7 +93,8 @@ class SocketInteractor {
       "room_id": chatMessage.roomId,
       "uuid": chatMessage.uuid,
       "text": chatMessage.cryptedMessage,
-      "photos": chatMessage.photos.map((e) => e.key).toList()
+      "photos": chatMessage.photos.map((e) => e.key).toList(),
+      "document": chatMessage.files.map((e) => e.toJson()).toList(),
     });
   }
 

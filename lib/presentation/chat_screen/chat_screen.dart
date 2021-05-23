@@ -123,7 +123,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                           PickedFiles pickedFiles =
                                               await showAttachFilePopup(context);
                                           if (pickedFiles != null && pickedFiles.files.isNotEmpty)
-                                            _presenter.uploadFiles(pickedFiles);
+                                            _presenter.uploadPickedFiles(pickedFiles);
                                         },
                                         image: 'assets/icons/ic_attach.svg',
                                       ),
@@ -213,9 +213,13 @@ class _ChatScreenState extends State<ChatScreen> {
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: images.length,
-          itemBuilder: (context, index) => UploadImageItem(
-                uploadImage: images[index],
-              )),
+          itemBuilder: (context, index) => images[index].fileType == PickFileType.Image
+              ? UploadImageItem(
+                  uploadImage: images[index],
+                )
+              : UploadFileItem(
+                  uploadImage: images[index],
+                )),
     );
   }
 }

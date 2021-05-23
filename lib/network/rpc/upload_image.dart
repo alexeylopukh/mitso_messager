@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:messager/constants.dart';
+import 'package:messager/presentation/chat_screen/widgets/attach_file_popup.dart';
 import 'package:messager/presentation/di/user_scope_data.dart';
 import 'package:path/path.dart' as path;
 
@@ -18,6 +19,7 @@ class UploadImageRpc {
     StreamController uploadProgressStreamController,
     String roomId,
     int isMessage,
+    PickFileType pickFileType,
   }) async {
     final fileByteStream = http.ByteStream(Stream.castFrom(file.openRead()));
     final length = file.lengthSync();
@@ -39,7 +41,7 @@ class UploadImageRpc {
 
     final request = http.MultipartRequest("POST", uri);
     request.fields['token'] = userScope.authToken();
-    //request.fields['is_doc'] = "1";
+    if (pickFileType == PickFileType.Document) request.fields['is_doc'] = "1";
     if (roomId != null) request.fields['room_id'] = roomId;
 
     final multipartFile = http.MultipartFile('file_name', uploadProgressStream, length,

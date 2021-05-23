@@ -28,6 +28,8 @@ class SocketHelper {
 
   Completer<bool> onChatRoomCompleter;
 
+  bool firstOnRooms = true;
+
   SocketHelper({@required this.userScope}) {
     _socket = io(WEB_SOCKET_URL, <String, dynamic>{
       'path': '/srv/',
@@ -116,6 +118,10 @@ class SocketHelper {
       }
     });
     _socket.on('on_rooms', (value) async {
+      // if (firstOnRooms) {
+      //   firstOnRooms = false;
+      //   sendData('on_rooms', {});
+      // }
       List<ChatRoom> rooms = List<ChatRoom>.from(value.map((x) => ChatRoom.fromJson(x)));
       await EncryptInteractor(userScope).decryptRooms(rooms);
       socketInteractor.appendChatRooms(rooms);
