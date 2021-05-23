@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -31,12 +26,35 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app requires to access your Apple Music for calls</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This app requires to access your Bluetooth for calls</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This app requires to access your Bluetooth for calls</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app requires to access your Calendar for calls</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires to access your сamera to enable you to upload pictures</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app requires to access your contact for calls</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires to access your Location for calls</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires to access your Location for calls</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need microphone access for uploading videos</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This app requires to access your Motion for calls</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need photo library access for uploading photo and videos</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app requires to access your Speech Recognition for calls</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
